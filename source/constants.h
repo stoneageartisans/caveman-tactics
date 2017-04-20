@@ -6,13 +6,15 @@
 #ifndef CONSTANTS_H
 #define CONSTANTS_H
 
-// Data Types
-#define String std::string
+// Files
+#define FILE_RESOURCES "resources.zip"
+#define FILE_SETTINGS  "data/settings.dat"
 
-// Type Definitions
-typedef double       f64;
-typedef int          s32;
-typedef float        f32;
-typedef unsigned int u32;
+// Graphics Settings
+#define FULLSCREEN              true
+#define WINDOWED                false
+#define BIT_DEPTH               32
+#define WINDOW_CAPTION          L"Caveman Tactics"
+#define COLOR_FORMAT            ECF_A8R8G8B8
 
 #endif /* CONSTANTS_H */

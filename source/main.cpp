@@ -7,7 +7,7 @@
 
 int main()
 {
-    Application* app = new Application;
+    Application* app = new Application();
     
     app->run();
     

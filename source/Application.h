@@ -7,6 +7,16 @@
 #define APPLICATION_H
 
 #include "Utilities.h"
+#include "constants.h"
+
+#include <irrlicht.h>
+
+using namespace irr;
+using namespace core;
+using namespace scene;
+using namespace video;
+using namespace io;
+using namespace gui;
 
 class Application
 {
@@ -17,10 +27,18 @@ class Application
         void run();
         
     private:
-        Utilities* utilities;
+        map<stringc, stringc> data;
+        bool                  display_type;
+        E_DRIVER_TYPE         driver_type;
+        dimension2d<u32>*     screen_dimensions;
+        s32                   screen_height;
+        s32                   screen_width;
+        Utilities*            utilities;
         
+        void create_settings();
         void dispose();
         void initialize();
+        void load_data( char* FILENAME );
 };
 
 #endif /* APPLICATION_H */
