@@ -56,6 +56,7 @@ class Application : public IEventReceiver
         void initialize_settings();
         void initialize_values();
         void load_data( const char* FILENAME );
+        void show_splash_screen();
 };
 
 #endif /* APPLICATION_H */

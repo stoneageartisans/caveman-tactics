@@ -66,6 +66,7 @@ void Application::initialize()
     initialize_irrlicht();
     initialize_values();
     initialize_display();
+    initialize_camera();
     
     ui = new UserInterface( irrlicht_device, z_offset );
     
@@ -107,7 +108,7 @@ void Application::initialize_display()
                                  vector2d<s32>( screen_width, screen_height ) );
     
     node_display_plane = scene_manager->addMeshSceneNode( scene_manager->getMesh( DISPLAY_PLANE ) );
-    node_display_plane->setMaterialFlag( EMF_LIGHTING, true );
+    node_display_plane->setMaterialFlag( EMF_LIGHTING, false );
     node_display_plane->setMaterialTexture( 0, video_driver->getTexture( DEVELOPER_IMAGE ) );
     node_display_plane->setPosition( vector3df( 0, 0, ( DISPLAY_PLANE_Z + z_offset ) ) );
 }
@@ -215,4 +216,11 @@ void Application::load_data( const char* FILENAME )
     }
     
     input_file_stream.close();
+}
+
+void Application::show_splash_screen()
+{
+    video_driver->beginScene( true, true, COLOR_DEVGRAY );
+    scene_manager->drawAll();
+    video_driver->endScene();
 }
