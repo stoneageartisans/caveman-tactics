@@ -9,31 +9,7 @@
 
 /* Public Methods */
 
-// Constructor
-Logger::Logger()
-{
-    initialize();
-}
-
-// Destructor
-Logger::~Logger()
-{
-    dispose();
-}
-
-void Logger::log( char* MESSAGE )
+void Logger::log( const char* MESSAGE )
 {
     std::cout << MESSAGE << std::endl;
-}
-
-/* Private Methods */
-
-void Logger::dispose()
-{
-    // TDOD
-}
-
-void Logger::initialize()
-{
-    // TODO
 }

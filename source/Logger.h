@@ -9,14 +9,7 @@
 class Logger
 {
     public:
-        Logger();
-        ~Logger();
-        void log( char* MESSAGE );
-        
-    private:
-        void dispose();
-        void initialize();
+        static void log( const char* MESSAGE );
 };
 
 #endif /* LOGGER_H */
-

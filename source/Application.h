@@ -6,8 +6,9 @@
 #ifndef APPLICATION_H
 #define APPLICATION_H
 
-#include "Utilities.h"
 #include "constants.h"
+#include "UserInterface.h"
+#include "Utilities.h"
 
 #include <irrlicht.h>
 
@@ -30,15 +31,21 @@ class Application
         map<stringc, stringc> data;
         bool                  display_type;
         E_DRIVER_TYPE         driver_type;
+        IGUIEnvironment*      gui_environment;
+        IrrlichtDevice*       irrlicht_device;
+        ISceneManager*        scene_manager;
         dimension2d<u32>*     screen_dimensions;
         s32                   screen_height;
         s32                   screen_width;
+        UserInterface*        ui;
         Utilities*            utilities;
+        IVideoDriver*         video_driver;
         
-        void create_settings();
         void dispose();
         void initialize();
-        void load_data( char* FILENAME );
+        void initialize_irrlicht();
+        void initialize_settings();
+        void load_data( const char* FILENAME );
 };
 
 #endif /* APPLICATION_H */

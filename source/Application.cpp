@@ -4,6 +4,7 @@
  */
 
 #include "Application.h"
+#include "Logger.h"
 
 #include <fstream>
 
@@ -33,7 +34,45 @@ void Application::run()
 
 /* Private Methods */
 
-void Application::create_settings()
+void Application::dispose()
+{
+    delete utilities;
+    delete ui;
+}
+
+void Application::initialize()
+{
+    Logger::log( "Initializing app..." );
+    
+    utilities = new Utilities();
+        
+    initialize_settings();
+    initialize_irrlicht();
+    
+    ui = new UserInterface( irrlicht_device );
+    
+    Logger::log( "...app initialized." );
+}
+
+void Application::initialize_irrlicht()
+{
+    irrlicht_device = createDevice( driver_type,
+                                    *screen_dimensions,
+                                    BIT_DEPTH,
+                                    display_type );    
+    irrlicht_device->setResizable( false );
+    irrlicht_device->setWindowCaption( WINDOW_CAPTION );
+    irrlicht_device->getFileSystem()->addFileArchive( FILE_RESOURCES );
+    irrlicht_device->setEventReceiver( ui );
+    
+    video_driver = irrlicht_device->getVideoDriver();
+    video_driver->setTextureCreationFlag( ETCF_CREATE_MIP_MAPS, false );
+    
+    scene_manager = irrlicht_device->getSceneManager();
+    gui_environment = irrlicht_device->getGUIEnvironment();
+}
+
+void Application::initialize_settings()
 {
     IrrlichtDevice* temp_device = createDevice( EDT_NULL );
     
@@ -42,7 +81,7 @@ void Application::create_settings()
     driver_type = EDT_BURNINGSVIDEO;
     screen_width = temp_device->getVideoModeList()->getDesktopResolution().Width;
     screen_height = temp_device->getVideoModeList()->getDesktopResolution().Height;
-       
+    
     load_data( FILE_SETTINGS );
     
     stringc* value = NULL;
@@ -95,20 +134,8 @@ void Application::create_settings()
     temp_device->drop();
 }
 
-void Application::dispose()
-{
-    delete utilities;
-}
-
-void Application::initialize()
-{
-    utilities = new Utilities();
-    
-    create_settings();
-}
-
 // Loads data from the specified file into data map
-void Application::load_data( char* FILENAME )
+void Application::load_data( const char* FILENAME )
 {
     char key[32];
     char value[32];
