@@ -8,7 +8,9 @@
 
 #include <fstream>
 
-/* Public Methods */
+/******************
+ * Public Methods *
+ ******************/ 
 
 // Constructor
 Application::Application()
@@ -24,7 +26,16 @@ Application::~Application()
 
 void Application::exit()
 {
-    // TODO
+    irrlicht_device->setEventReceiver( 0 );
+    irrlicht_device->closeDevice();
+    irrlicht_device->run();
+}
+
+bool Application::OnEvent( const SEvent& EVENT )
+{
+    bool result = false;
+    
+    return result;
 }
 
 void Application::run()
@@ -32,26 +43,73 @@ void Application::run()
     // TDOD
 }
 
-/* Private Methods */
+/*******************
+ * Private Methods *
+ *******************/
 
 void Application::dispose()
 {
-    delete utilities;
+    delete color_background;
+    delete color_white;
+    delete rect_screen;
     delete ui;
+    delete utilities;
 }
 
 void Application::initialize()
 {
-    Logger::log( "Initializing app..." );
+    Logger::log( "Initializing Application..." );
     
     utilities = new Utilities();
         
     initialize_settings();
     initialize_irrlicht();
+    initialize_values();
+    initialize_display();
     
-    ui = new UserInterface( irrlicht_device );
+    ui = new UserInterface( irrlicht_device, z_offset );
     
-    Logger::log( "...app initialized." );
+    Logger::log( "...Application initialized." );
+}
+
+void Application::initialize_camera()
+{
+    camera = scene_manager->addCameraSceneNode();
+    camera->setFarValue( MAX_Z );
+    camera->setPosition( vector3df( 0, 0, 0 ) );
+    camera->setTarget( vector3df( 0, 0, 1 ) );
+}
+
+void Application::initialize_display()
+{
+    z_offset = 0.0;
+    
+    f32 screen_ratio = (f32) ( (f32) screen_width / (f32) screen_height );
+    
+    if( ( screen_ratio >= 1 ) && ( screen_ratio < 1.3 ) )
+    {
+        z_offset = Z_OFFSET_1_250;
+    }
+    else if( ( screen_ratio >= 1.3 ) && ( screen_ratio < 1.47 ) )
+    {
+        z_offset = Z_OFFSET_1_333;
+    }
+    else if( ( screen_ratio >= 1.47 ) && ( screen_ratio < 1.69 ) )
+    {
+        z_offset = Z_OFFSET_1_600;
+    }
+    else if( ( screen_ratio >= 1.69 ) && ( screen_ratio < 1.86 ) )
+    {
+        z_offset = Z_OFFSET_1_777;
+    }
+        
+    rect_screen = new rect<s32>( vector2d<s32>(0, 0),
+                                 vector2d<s32>( screen_width, screen_height ) );
+    
+    node_display_plane = scene_manager->addMeshSceneNode( scene_manager->getMesh( DISPLAY_PLANE ) );
+    node_display_plane->setMaterialFlag( EMF_LIGHTING, true );
+    node_display_plane->setMaterialTexture( 0, video_driver->getTexture( DEVELOPER_IMAGE ) );
+    node_display_plane->setPosition( vector3df( 0, 0, ( DISPLAY_PLANE_Z + z_offset ) ) );
 }
 
 void Application::initialize_irrlicht()
@@ -63,7 +121,7 @@ void Application::initialize_irrlicht()
     irrlicht_device->setResizable( false );
     irrlicht_device->setWindowCaption( WINDOW_CAPTION );
     irrlicht_device->getFileSystem()->addFileArchive( FILE_RESOURCES );
-    irrlicht_device->setEventReceiver( ui );
+    irrlicht_device->setEventReceiver( this );
     
     video_driver = irrlicht_device->getVideoDriver();
     video_driver->setTextureCreationFlag( ETCF_CREATE_MIP_MAPS, false );
@@ -132,6 +190,12 @@ void Application::initialize_settings()
     screen_dimensions = new dimension2d<u32>( screen_width, screen_height );
     
     temp_device->drop();
+}
+
+void Application::initialize_values()
+{
+    color_background = new COLOR_DKGRAY;
+    color_white = new COLOR_WHITE;
 }
 
 // Loads data from the specified file into data map

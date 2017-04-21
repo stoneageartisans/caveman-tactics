@@ -8,22 +8,15 @@
 /* Public Methods */
 
 // Constructor
-UserInterface::UserInterface( IrrlichtDevice* IRRLICHT_DEVICE )
+UserInterface::UserInterface( IrrlichtDevice* IRRLICHT_DEVICE, f32 Z_OFFSET )
 {
-    initialize( IRRLICHT_DEVICE );
+    initialize( IRRLICHT_DEVICE, Z_OFFSET );
 }
 
 // Destructor
 UserInterface::~UserInterface( )
 {
     dispose();
-}
-
-bool UserInterface::OnEvent( const SEvent& EVENT )
-{
-    bool result = false;
-    
-    return result;
 }
 
 /* Private Methods */
@@ -33,7 +26,10 @@ void UserInterface::dispose()
     // TODO
 }
 
-void UserInterface::initialize( IrrlichtDevice* IRRLICHT_DEVICE )
+void UserInterface::initialize( IrrlichtDevice* IRRLICHT_DEVICE, f32 Z_OFFSET )
 {
-    // TODO
+    z_offset = Z_OFFSET;
+    
+    gui_environment = IRRLICHT_DEVICE->getGUIEnvironment();
+    scene_manager = IRRLICHT_DEVICE->getSceneManager();
 }

@@ -15,18 +15,19 @@ using namespace video;
 using namespace io;
 using namespace gui;
 
-class UserInterface : public IEventReceiver
+class UserInterface
 {
     public:
-        UserInterface( IrrlichtDevice* IRRLICHT_DEVICE );
-        ~UserInterface( );
-        bool OnEvent( const SEvent& EVENT ) override;
+        UserInterface( IrrlichtDevice* IRRLICHT_DEVICE, f32 Z_OFFSET );
+        ~UserInterface( );        
         
     private:
         IGUIEnvironment* gui_environment;
+        ISceneManager*   scene_manager;
+        f32              z_offset;
         
         void dispose();
-        void initialize( IrrlichtDevice* IRRLICHT_DEVICE );
+        void initialize( IrrlichtDevice* IRRLICHT_DEVICE, f32 Z_OFFSET );
 };
 
 #endif /* USERINTERFACE_H */
