@@ -29,15 +29,16 @@ class Application : public IEventReceiver
         void run();
         
     private:
-        Callback              callback;
         ICameraSceneNode*     camera;
         SColor*               color_background;
         SColor*               color_white;
         map<stringc, stringc> data;
+        Process               delayed_process;
         bool                  display_type;
         E_DRIVER_TYPE         driver_type;
         IGUIEnvironment*      gui_environment;
         IrrlichtDevice*       irrlicht_device;
+        bool                  is_new_game;
         IMeshSceneNode*       node_display_plane;
         rect<s32>*            rect_screen;
         ISceneManager*        scene_manager;
@@ -45,15 +46,16 @@ class Application : public IEventReceiver
         s32                   screen_height;
         s32                   screen_width;
         u32                   timer_delay;
-        bool                  timer_running;
+        bool                  timer_is_running;
         u32                   timer_start;
         UserInterface*        ui;
         Utilities*            utilities;
         IVideoDriver*         video_driver;
         f32                   z_offset;
         
+        void check_timer();
         void dispose();
-        void execute_callback();
+        void execute_process( Process PROCESS );
         void initialize();
         void initialize_camera();
         void initialize_display();
@@ -61,10 +63,11 @@ class Application : public IEventReceiver
         void initialize_settings();
         void initialize_values();
         void load_data( const char* FILENAME );
+        void reset_timer();
         void show_main_menu();
         void show_splash_screen();
         void show_title_screen();
-        void start_timer( u32 DELAY, Callback CALLBACK );
+        void start_timer( u32 DELAY, Process DELAYED_PROCESS );
 };
 
 #endif /* APPLICATION_H */

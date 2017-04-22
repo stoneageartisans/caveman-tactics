@@ -16,7 +16,6 @@
 Application::Application()
 {
     initialize();
-    execute_callback();
 }
 
 // Destructor
@@ -48,6 +47,18 @@ void Application::run()
  * Private Methods *
  *******************/
 
+void Application::check_timer()
+{
+    if( timer_is_running )
+    {
+        if( ( irrlicht_device->getTimer()->getRealTime() - timer_start ) > timer_delay )
+        {            
+            execute_process( delayed_process );
+            reset_timer();
+        }
+    }
+}
+
 void Application::dispose()
 {
     delete color_background;
@@ -57,10 +68,13 @@ void Application::dispose()
     delete utilities;
 }
 
-void Application::execute_callback()
+void Application::execute_process( Process PROCESS )
 {
-    switch( callback )
+    switch( PROCESS )
     {
+        case NONE:
+            // Do nothing
+            break;
         case SHOW_TITLE_SCREEN:
             show_title_screen();
             break;
@@ -72,8 +86,6 @@ void Application::execute_callback()
 
 void Application::initialize()
 {
-    Logger::log( "Initializing Application..." );
-    
     utilities = new Utilities();
         
     initialize_settings();
@@ -85,8 +97,6 @@ void Application::initialize()
     show_splash_screen();
     
     ui = new UserInterface( irrlicht_device, z_offset );
-    
-    Logger::log( "...Application initialized." );
 }
 
 void Application::initialize_camera()
@@ -125,8 +135,8 @@ void Application::initialize_display()
     
     node_display_plane = scene_manager->addMeshSceneNode( scene_manager->getMesh( DISPLAY_PLANE ) );
     node_display_plane->setMaterialFlag( EMF_LIGHTING, false );
-    node_display_plane->setMaterialTexture( 0, video_driver->getTexture( DEVELOPER_IMAGE ) );
     node_display_plane->setPosition( vector3df( 0, 0, ( DISPLAY_PLANE_Z + z_offset ) ) );
+    node_display_plane->setMaterialTexture( 0, video_driver->getTexture( DEVELOPER_IMAGE ) );
 }
 
 void Application::initialize_irrlicht()
@@ -156,6 +166,7 @@ void Application::initialize_settings()
     driver_type = EDT_BURNINGSVIDEO;
     screen_width = temp_device->getVideoModeList()->getDesktopResolution().Width;
     screen_height = temp_device->getVideoModeList()->getDesktopResolution().Height;
+    is_new_game = true;
     
     load_data( FILE_SETTINGS );
     
@@ -195,14 +206,20 @@ void Application::initialize_settings()
         value = new stringc( data["screen_height"] );
         screen_height = (s32) atoi( value->c_str() );
     }
+    if( data.find( "is_new_game" ) != 0 )
+    {
+        value = new stringc( data["is_new_game"] );
+        if( value->equalsn( "true", 4 ) )
+        {
+            is_new_game = true;
+        }
+        else if( value->equalsn( "false", 5 ) )
+        {
+            is_new_game = false;
+        }
+    }
     
     delete value;
-    
-    // For testing
-    //screen_width = 1120; screen_height = 896; // Ratio 1.250
-    //screen_width = 1152; screen_height = 864; // Ratio 1.333
-    //screen_width = 1280; screen_height = 800; // Ratio 1.600
-    //screen_width = 1366; screen_height = 768;  // Ratio 1.777
     
     screen_dimensions = new dimension2d<u32>( screen_width, screen_height );
     
@@ -213,6 +230,8 @@ void Application::initialize_values()
 {
     color_background = new COLOR_DKGRAY;
     color_white = new COLOR_WHITE;
+    timer_is_running = false;
+    delayed_process = NONE;
 }
 
 // Loads data from the specified file into data map
@@ -234,6 +253,14 @@ void Application::load_data( const char* FILENAME )
     input_file_stream.close();
 }
 
+void Application::reset_timer()
+{
+    timer_is_running = false;
+    delayed_process = NONE;
+    timer_delay = 0;
+    timer_start = 0;
+}
+
 void Application::show_main_menu()
 {
     // TODO
@@ -250,13 +277,17 @@ void Application::show_splash_screen()
 
 void Application::show_title_screen()
 {
-    // TODO
+    node_display_plane->setMaterialTexture( 0, video_driver->getTexture( TITLE_IMAGE ) );
+    
+    video_driver->beginScene( true, true, COLOR_DEVGRAY );
+    scene_manager->drawAll();
+    video_driver->endScene();
 }
 
-void Application::start_timer( u32 DELAY_DURATION, Callback CALLBACK )
+void Application::start_timer( u32 DELAY_DURATION, Process DELAYED_PROCESS )
 {
-    timer_delay = DELAY_DURATION;
-    callback = CALLBACK;    
-    timer_start = irrlicht_device->getTimer()->getRealTime();    
-    timer_running = true;
+    timer_is_running = true;
+    delayed_process = DELAYED_PROCESS;
+    timer_delay = DELAY_DURATION;    
+    timer_start = irrlicht_device->getTimer()->getRealTime();
 }

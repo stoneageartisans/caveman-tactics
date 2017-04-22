@@ -7,8 +7,9 @@
 #define CONSTANTS_H
 
 // Enumerations
-enum Callback
+enum Process
 {
+    NONE,
     SHOW_TITLE_SCREEN,
     SHOW_MAIN_MENU
 };
@@ -41,6 +42,9 @@ enum Callback
 #define BIT_DEPTH         32
 #define WINDOW_CAPTION    L"Caveman Tactics"
 #define COLOR_FORMAT      ECF_A8R8G8B8
+
+// Grid Settings
+#define TOTAL_HEXES       46
 
 // Misc Settings
 #define DELAY_SPLASH      2000
