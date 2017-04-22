@@ -16,6 +16,7 @@
 Application::Application()
 {
     initialize();
+    execute_callback();
 }
 
 // Destructor
@@ -56,6 +57,19 @@ void Application::dispose()
     delete utilities;
 }
 
+void Application::execute_callback()
+{
+    switch( callback )
+    {
+        case SHOW_TITLE_SCREEN:
+            show_title_screen();
+            break;
+        case SHOW_MAIN_MENU:
+            show_main_menu();
+            break;
+    }
+}
+
 void Application::initialize()
 {
     Logger::log( "Initializing Application..." );
@@ -67,6 +81,8 @@ void Application::initialize()
     initialize_values();
     initialize_display();
     initialize_camera();
+    
+    show_splash_screen();
     
     ui = new UserInterface( irrlicht_device, z_offset );
     
@@ -218,9 +234,29 @@ void Application::load_data( const char* FILENAME )
     input_file_stream.close();
 }
 
+void Application::show_main_menu()
+{
+    // TODO
+}
+
 void Application::show_splash_screen()
 {
     video_driver->beginScene( true, true, COLOR_DEVGRAY );
     scene_manager->drawAll();
     video_driver->endScene();
+    
+    start_timer( DELAY_SPLASH, SHOW_TITLE_SCREEN );
+}
+
+void Application::show_title_screen()
+{
+    // TODO
+}
+
+void Application::start_timer( u32 DELAY_DURATION, Callback CALLBACK )
+{
+    timer_delay = DELAY_DURATION;
+    callback = CALLBACK;    
+    timer_start = irrlicht_device->getTimer()->getRealTime();    
+    timer_running = true;
 }

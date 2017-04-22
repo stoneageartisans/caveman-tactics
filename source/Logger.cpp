@@ -7,7 +7,9 @@
 
 #include <iostream>
 
-/* Public Methods */
+/******************
+ * Public Methods *
+ ******************/
 
 void Logger::log( const char* MESSAGE )
 {

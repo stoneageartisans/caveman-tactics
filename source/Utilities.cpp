@@ -8,7 +8,9 @@
 #include <cstdlib>
 #include <time.h>
 
-/* Public Methods */
+/******************
+ * Public Methods *
+ ******************/
 
 // Constructor
 Utilities::Utilities()
@@ -55,7 +57,9 @@ s32 Utilities::get_random( s32 LOWEST, s32 HIGHEST )
     return ( rand() % ( HIGHEST - LOWEST + 1 ) ) + LOWEST;
 }
 
-/* Private Methods */
+/*******************
+ * Private Methods *
+ *******************/
 
 void Utilities::dispose()
 {

@@ -6,6 +6,13 @@
 #ifndef CONSTANTS_H
 #define CONSTANTS_H
 
+// Enumerations
+enum Callback
+{
+    SHOW_TITLE_SCREEN,
+    SHOW_MAIN_MENU
+};
+
 // Colors                          A    R    G    B
 #define COLOR_TRANSPARENT SColor(  0,   0,   0,   0)
 #define COLOR_BLACK       SColor(255,   0,   0,   0)
@@ -36,6 +43,7 @@
 #define COLOR_FORMAT      ECF_A8R8G8B8
 
 // Misc Settings
+#define DELAY_SPLASH      2000
 
 // Packed Files - Images
 #define DEVELOPER_IMAGE   "images/developer_screen.png"

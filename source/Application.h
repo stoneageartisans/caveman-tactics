@@ -29,6 +29,7 @@ class Application : public IEventReceiver
         void run();
         
     private:
+        Callback              callback;
         ICameraSceneNode*     camera;
         SColor*               color_background;
         SColor*               color_white;
@@ -43,12 +44,16 @@ class Application : public IEventReceiver
         dimension2d<u32>*     screen_dimensions;
         s32                   screen_height;
         s32                   screen_width;
+        u32                   timer_delay;
+        bool                  timer_running;
+        u32                   timer_start;
         UserInterface*        ui;
         Utilities*            utilities;
         IVideoDriver*         video_driver;
         f32                   z_offset;
         
         void dispose();
+        void execute_callback();
         void initialize();
         void initialize_camera();
         void initialize_display();
@@ -56,7 +61,10 @@ class Application : public IEventReceiver
         void initialize_settings();
         void initialize_values();
         void load_data( const char* FILENAME );
+        void show_main_menu();
         void show_splash_screen();
+        void show_title_screen();
+        void start_timer( u32 DELAY, Callback CALLBACK );
 };
 
 #endif /* APPLICATION_H */

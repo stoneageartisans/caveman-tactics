@@ -5,7 +5,9 @@
 
 #include "UserInterface.h"
 
-/* Public Methods */
+/******************
+ * Public Methods *
+ ******************/
 
 // Constructor
 UserInterface::UserInterface( IrrlichtDevice* IRRLICHT_DEVICE, f32 Z_OFFSET )
@@ -19,7 +21,9 @@ UserInterface::~UserInterface( )
     dispose();
 }
 
-/* Private Methods */
+/*******************
+ * Private Methods *
+ *******************/
 
 void UserInterface::dispose()
 {
