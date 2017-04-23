@@ -9,9 +9,19 @@
 // Enumerations
 enum Process
 {
-    NONE,
+    NO_PROCESS,
     SHOW_TITLE_SCREEN,
     SHOW_MAIN_MENU
+};
+
+enum Screen
+{
+    NO_SCREEN,
+    TITLE,
+    MENU,
+    GAME,
+    CHARACTER,
+    OPTIONS
 };
 
 // Colors                          A    R    G    B
@@ -50,11 +60,15 @@ enum Process
 #define DELAY_SPLASH      2000
 
 // Packed Files - Images
+#define CHARACTER_UNARMED "images/character_unarmed.png"
 #define DEVELOPER_IMAGE   "images/developer_screen.png"
-#define MOUSEMAP_IMAGE    "images/mousemap.png"
-#define TITLE_IMAGE       "images/title_screen.png"
-#define MENU_IMAGE        "images/menu_screen.png"
 #define GAME_IMAGE        "images/game_screen.png"
+#define HIGHLIGHT_NONE    "images/highlight_none.png"
+#define HIGHLIGHT_GREEN   "images/highlight_green.png"
+#define MOUSEMAP_IMAGE    "images/mousemap.png"
+#define MENU_IMAGE        "images/menu_screen.png"
+#define OPPONENT_UNARMED  "images/opponent_unarmed.png"
+#define TITLE_IMAGE       "images/title_screen.png"
 
 // Packed Files - Meshes
 #define DISPLAY_PLANE     "meshes/plane_1920x1200.3ds"

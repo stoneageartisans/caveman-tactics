@@ -33,9 +33,73 @@ void Application::exit()
 
 bool Application::OnEvent( const SEvent& EVENT )
 {
-    bool result = false;
+    bool was_handled = false;
     
-    return result;
+    switch( current_screen )
+    {
+        case GAME:
+            switch( EVENT.EventType )
+            {
+                case EET_MOUSE_INPUT_EVENT:
+                    switch( EVENT.MouseInput.Event )
+                    {
+                        case EMIE_LMOUSE_LEFT_UP:
+                            mousemap_x = EVENT.MouseInput.X;
+                            mousemap_y = EVENT.MouseInput.Y;
+                            was_handled = true;
+                            break;
+                    }
+                    break;
+                case EET_KEY_INPUT_EVENT:
+                    switch( EVENT.KeyInput.Key )
+                    {
+                        case KEY_ESCAPE:
+                            if( !EVENT.KeyInput.PressedDown )
+                            {
+                                //hide_game_screen();
+                                //show_main_menu();
+                                was_handled = true;
+                            }
+                            break;
+                    }
+                    break;
+            }
+            break;
+        case MENU:
+            break;
+        case CHARACTER:
+            break;
+        case TITLE:
+            switch( EVENT.EventType )
+            {
+                case EET_MOUSE_INPUT_EVENT:
+                    if( EVENT.MouseInput.Event == EMIE_LMOUSE_LEFT_UP )
+                    {
+                        //textnode_continue->setVisible( false );
+                        //show_main_menu();
+                        was_handled = true;
+                    }
+                    break;
+                case EET_KEY_INPUT_EVENT:
+                    if( EVENT.KeyInput.Key == KEY_SPACE )
+                    {
+                        if( !EVENT.KeyInput.PressedDown )
+                        {
+                            //textnode_continue->setVisible( false );
+                            //show_main_menu();
+                            was_handled = true;
+                        }
+                    }
+                    break;
+            }
+            break;
+        case OPTIONS:
+            break;
+        case NO_SCREEN:
+            break;
+    }
+    
+    return was_handled;
 }
 
 void Application::run()
@@ -72,7 +136,7 @@ void Application::execute_process( Process PROCESS )
 {
     switch( PROCESS )
     {
-        case NONE:
+        case NO_PROCESS:
             // Do nothing
             break;
         case SHOW_TITLE_SCREEN:
@@ -95,6 +159,8 @@ void Application::initialize()
     initialize_camera();
     
     show_splash_screen();
+    
+    load_resources();
     
     ui = new UserInterface( irrlicht_device, z_offset );
 }
@@ -231,7 +297,8 @@ void Application::initialize_values()
     color_background = new COLOR_DKGRAY;
     color_white = new COLOR_WHITE;
     timer_is_running = false;
-    delayed_process = NONE;
+    delayed_process = NO_PROCESS;
+    current_screen = NO_SCREEN;
 }
 
 // Loads data from the specified file into data map
@@ -253,10 +320,18 @@ void Application::load_data( const char* FILENAME )
     input_file_stream.close();
 }
 
+void Application::load_resources()
+{
+    texture_game_screen = video_driver->getTexture( GAME_IMAGE );
+    texture_highlight_green = video_driver->getTexture( HIGHLIGHT_GREEN );
+    texture_highlight_none = video_driver->getTexture( HIGHLIGHT_NONE );
+    texture_menu_screen = video_driver->getTexture( MENU_IMAGE );
+}
+
 void Application::reset_timer()
 {
     timer_is_running = false;
-    delayed_process = NONE;
+    delayed_process = NO_PROCESS;
     timer_delay = 0;
     timer_start = 0;
 }
@@ -268,7 +343,7 @@ void Application::show_main_menu()
 
 void Application::show_splash_screen()
 {
-    video_driver->beginScene( true, true, COLOR_DEVGRAY );
+    video_driver->beginScene( true, true, *color_background );
     scene_manager->drawAll();
     video_driver->endScene();
     
@@ -279,9 +354,12 @@ void Application::show_title_screen()
 {
     node_display_plane->setMaterialTexture( 0, video_driver->getTexture( TITLE_IMAGE ) );
     
-    video_driver->beginScene( true, true, COLOR_DEVGRAY );
+    video_driver->beginScene( true, true, *color_background );
     scene_manager->drawAll();
+    gui_environment->drawAll();
     video_driver->endScene();
+    
+    current_screen = TITLE;
 }
 
 void Application::start_timer( u32 DELAY_DURATION, Process DELAYED_PROCESS )

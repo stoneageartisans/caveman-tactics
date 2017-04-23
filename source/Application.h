@@ -32,6 +32,7 @@ class Application : public IEventReceiver
         ICameraSceneNode*     camera;
         SColor*               color_background;
         SColor*               color_white;
+        Screen                current_screen;
         map<stringc, stringc> data;
         Process               delayed_process;
         bool                  display_type;
@@ -39,12 +40,18 @@ class Application : public IEventReceiver
         IGUIEnvironment*      gui_environment;
         IrrlichtDevice*       irrlicht_device;
         bool                  is_new_game;
+        s32                   mousemap_x;
+        s32                   mousemap_y;
         IMeshSceneNode*       node_display_plane;
         rect<s32>*            rect_screen;
         ISceneManager*        scene_manager;
         dimension2d<u32>*     screen_dimensions;
         s32                   screen_height;
         s32                   screen_width;
+        ITexture*             texture_game_screen;
+        ITexture*             texture_highlight_green;
+        ITexture*             texture_highlight_none;
+        ITexture*             texture_menu_screen;
         u32                   timer_delay;
         bool                  timer_is_running;
         u32                   timer_start;
@@ -63,6 +70,7 @@ class Application : public IEventReceiver
         void initialize_settings();
         void initialize_values();
         void load_data( const char* FILENAME );
+        void load_resources();
         void reset_timer();
         void show_main_menu();
         void show_splash_screen();
