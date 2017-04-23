@@ -11,8 +11,7 @@ enum Process
 {
     NO_PROCESS,
     FLASH_TEXT,
-    SHOW_TITLE_SCREEN,
-    SHOW_MAIN_MENU
+    SHOW_TITLE_SCREEN
 };
 
 enum Screen

@@ -75,8 +75,9 @@ bool Application::OnEvent( const SEvent& EVENT )
                 case EET_MOUSE_INPUT_EVENT:
                     if( EVENT.MouseInput.Event == EMIE_LMOUSE_LEFT_UP )
                     {
-                        //textnode_continue->setVisible( false );
-                        //show_main_menu();
+                        current_screen = MAIN_MENU;
+                        node_display_plane->setMaterialTexture( 0, texture_menu_screen );
+                        ui->set_view( current_screen );
                         was_handled = true;
                     }
                     break;
@@ -85,8 +86,9 @@ bool Application::OnEvent( const SEvent& EVENT )
                     {
                         if( !EVENT.KeyInput.PressedDown )
                         {
-                            //textnode_continue->setVisible( false );
-                            //show_main_menu();
+                            current_screen = MAIN_MENU;
+                            node_display_plane->setMaterialTexture( 0, texture_menu_screen );
+                            ui->set_view( current_screen );
                             was_handled = true;
                         }
                     }
@@ -189,10 +191,6 @@ void Application::execute_process( Process PROCESS )
         case SHOW_TITLE_SCREEN:
             reset_timer();
             show_title_screen();            
-            break;
-        case SHOW_MAIN_MENU:
-            reset_timer();
-            show_main_menu();
             break;
     }
 }
@@ -385,11 +383,6 @@ void Application::reset_timer()
     delayed_process = NO_PROCESS;
     timer_delay = 0;
     timer_start = 0;
-}
-
-void Application::show_main_menu()
-{
-    // TODO
 }
 
 void Application::show_splash_screen()

@@ -23,6 +23,7 @@ class UserInterface
         UserInterface( IrrlichtDevice* IRRLICHT_DEVICE, f32 Z_OFFSET );
         ~UserInterface();
         void flash_text();
+        void set_view( Screen SCREEN );
         
     private:
         ITextSceneNode*  flashing_text;

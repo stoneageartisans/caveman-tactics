@@ -33,6 +33,19 @@ void UserInterface::flash_text()
     }
 }
 
+void UserInterface::set_view( Screen SCREEN )
+{
+    switch( SCREEN )
+    {
+        case MAIN_MENU:
+            flashing_text = NULL;
+            textnode_continue->setVisible( false );
+            break;
+        case GAME:
+            break;
+    }
+}
+
 /*******************
  * Private Methods *
  *******************/

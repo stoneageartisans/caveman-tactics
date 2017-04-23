@@ -72,7 +72,6 @@ class Application : public IEventReceiver
         void load_data( const char* FILENAME );
         void load_resources();
         void reset_timer();
-        void show_main_menu();
         void show_splash_screen();
         void show_title_screen();
         void start_timer( u32 DELAY, Process DELAYED_PROCESS );
