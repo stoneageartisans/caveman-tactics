@@ -6,6 +6,8 @@
 #ifndef USERINTERFACE_H
 #define USERINTERFACE_H
 
+#include "constants.h"
+
 #include <irrlicht.h>
 
 using namespace irr;
@@ -19,15 +21,26 @@ class UserInterface
 {
     public:
         UserInterface( IrrlichtDevice* IRRLICHT_DEVICE, f32 Z_OFFSET );
-        ~UserInterface( );        
+        ~UserInterface();
+        void flash_text();
         
     private:
+        ITextSceneNode*  flashing_text;
+        IGUIFont*        font_main;
         IGUIEnvironment* gui_environment;
         ISceneManager*   scene_manager;
+        s32              screen_height;
+        s32              screen_width;
+        IGUISkin*        skin;
+        ITextSceneNode*  textnode_continue;
+        //IVideoDriver*    video_driver;
         f32              z_offset;
         
-        void dispose();
+        void dispose();        
         void initialize( IrrlichtDevice* IRRLICHT_DEVICE, f32 Z_OFFSET );
+        void initialize_fonts();
+        void initialize_skin();
+        void initialize_widgets();
 };
 
 #endif /* USERINTERFACE_H */

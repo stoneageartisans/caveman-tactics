@@ -65,7 +65,7 @@ bool Application::OnEvent( const SEvent& EVENT )
                     break;
             }
             break;
-        case MENU:
+        case MAIN_MENU:
             break;
         case CHARACTER:
             break;
@@ -104,7 +104,51 @@ bool Application::OnEvent( const SEvent& EVENT )
 
 void Application::run()
 {
-    // TDOD
+    while( irrlicht_device->run() )
+    {
+        switch( current_screen )
+        {
+            case GAME:
+                video_driver->beginScene(true, true, *color_background);
+                scene_manager->drawAll();
+                gui_environment->drawAll();
+                video_driver->endScene();
+                break;
+            case MAIN_MENU:
+                video_driver->beginScene(true, true, *color_background);
+                scene_manager->drawAll();
+                gui_environment->drawAll();
+                video_driver->endScene();
+                break;
+            case CHARACTER:
+                video_driver->beginScene(true, true, *color_background);
+                scene_manager->drawAll();
+                gui_environment->drawAll();
+                video_driver->endScene();
+                break;
+            case TITLE:
+                video_driver->beginScene(true, true, *color_background);
+                scene_manager->drawAll();
+                gui_environment->drawAll();
+                video_driver->endScene();
+                check_timer();
+                break;
+            case OPTIONS:
+                video_driver->beginScene(true, true, *color_background);
+                scene_manager->drawAll();
+                gui_environment->drawAll();
+                video_driver->endScene();
+                break;
+            case NO_SCREEN:
+                video_driver->beginScene( true, true, *color_background );
+                scene_manager->drawAll();
+                video_driver->endScene();
+                check_timer();
+                break;
+        }
+        
+        irrlicht_device->yield();
+    }
 }
 
 /*******************
@@ -117,8 +161,7 @@ void Application::check_timer()
     {
         if( ( irrlicht_device->getTimer()->getRealTime() - timer_start ) > timer_delay )
         {            
-            execute_process( delayed_process );
-            reset_timer();
+            execute_process( delayed_process );            
         }
     }
 }
@@ -139,10 +182,16 @@ void Application::execute_process( Process PROCESS )
         case NO_PROCESS:
             // Do nothing
             break;
+        case FLASH_TEXT:
+            ui->flash_text();
+            start_timer( DELAY_TEXT_FLASH, FLASH_TEXT );
+            break;
         case SHOW_TITLE_SCREEN:
-            show_title_screen();
+            reset_timer();
+            show_title_screen();            
             break;
         case SHOW_MAIN_MENU:
+            reset_timer();
             show_main_menu();
             break;
     }
@@ -297,6 +346,8 @@ void Application::initialize_values()
     color_background = new COLOR_DKGRAY;
     color_white = new COLOR_WHITE;
     timer_is_running = false;
+    timer_delay = 0;
+    timer_start = 0;
     delayed_process = NO_PROCESS;
     current_screen = NO_SCREEN;
 }
@@ -360,6 +411,8 @@ void Application::show_title_screen()
     video_driver->endScene();
     
     current_screen = TITLE;
+    
+    start_timer( DELAY_TEXT_FLASH, FLASH_TEXT );
 }
 
 void Application::start_timer( u32 DELAY_DURATION, Process DELAYED_PROCESS )
