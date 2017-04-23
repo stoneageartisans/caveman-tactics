@@ -214,10 +214,18 @@ void Application::initialize()
 
 void Application::initialize_camera()
 {
+    // Lights...
+    light = scene_manager->addLightSceneNode();
+    light->setLightType( ELT_POINT );
+    light->setRadius( LIGHT_RADIUS );
+    
+    // Camera...
     camera = scene_manager->addCameraSceneNode();
     camera->setFarValue( MAX_Z );
     camera->setPosition( vector3df( 0, 0, 0 ) );
     camera->setTarget( vector3df( 0, 0, 1 ) );
+    
+    // ACTION!
 }
 
 void Application::initialize_display()
@@ -247,7 +255,7 @@ void Application::initialize_display()
                                  vector2d<s32>( screen_width, screen_height ) );
     
     node_display_plane = scene_manager->addMeshSceneNode( scene_manager->getMesh( DISPLAY_PLANE ) );
-    node_display_plane->setMaterialFlag( EMF_LIGHTING, false );
+    node_display_plane->setMaterialFlag( EMF_LIGHTING, true );
     node_display_plane->setPosition( vector3df( 0, 0, ( DISPLAY_PLANE_Z + z_offset ) ) );
     node_display_plane->setMaterialTexture( 0, video_driver->getTexture( DEVELOPER_IMAGE ) );
 }

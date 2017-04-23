@@ -40,6 +40,7 @@ class Application : public IEventReceiver
         IGUIEnvironment*      gui_environment;
         IrrlichtDevice*       irrlicht_device;
         bool                  is_new_game;
+        ILightSceneNode*      light;
         s32                   mousemap_x;
         s32                   mousemap_y;
         IMeshSceneNode*       node_display_plane;

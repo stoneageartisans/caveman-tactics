@@ -59,6 +59,7 @@ enum Screen
 // Misc Settings
 #define DELAY_SPLASH       2500
 #define DELAY_TEXT_FLASH    500
+#define LIGHT_RADIUS       3000
 
 // Packed Files - Fonts
 #define FONT_24            "fonts/font_comic_24.xml"
