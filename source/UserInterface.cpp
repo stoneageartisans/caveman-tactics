@@ -37,11 +37,19 @@ void UserInterface::set_view( Screen SCREEN )
 {
     switch( SCREEN )
     {
-        case MAIN_MENU:
-            flashing_text = NULL;
-            textnode_continue->setVisible( false );
+        case MAIN_MENU:            
+            show_main_menu();
             break;
         case GAME:
+            hide_main_menu();
+            break;
+        case CHARACTER:
+            break;
+        case OPTIONS:
+            break;
+        case TITLE:
+            break;
+        case NO_SCREEN:
             break;
     }
 }
@@ -55,16 +63,24 @@ void UserInterface::dispose()
     // TODO
 }
 
+void UserInterface::hide_main_menu()
+{
+    button_exit->setVisible( false );
+    button_options->setVisible( false );
+    button_resume->setVisible( false );
+    button_start->setVisible( false );
+}
+
 void UserInterface::initialize( IrrlichtDevice* IRRLICHT_DEVICE, f32 Z_OFFSET )
 {
     z_offset = Z_OFFSET;
     
-    //video_driver = IRRLICHT_DEVICE->getVideoDriver();
+    video_driver = IRRLICHT_DEVICE->getVideoDriver();
     gui_environment = IRRLICHT_DEVICE->getGUIEnvironment();
     scene_manager = IRRLICHT_DEVICE->getSceneManager();
     
-    screen_width = IRRLICHT_DEVICE->getVideoModeList()->getDesktopResolution().Width;
-    screen_height = IRRLICHT_DEVICE->getVideoModeList()->getDesktopResolution().Height;
+    screen_width = video_driver->getScreenSize().Width;
+    screen_height = video_driver->getScreenSize().Height;
     
     initialize_fonts();
     initialize_skin();
@@ -89,6 +105,44 @@ void UserInterface::initialize_fonts()
     }
 }
 
+void UserInterface::initialize_main_menu( ISceneCollisionManager* COLLISION_MANAGER,
+                                          u32 BUTTON_WIDTH,
+                                          u32 BUTTON_HEIGHT )
+{
+    position2d<s32> temp_position;
+    
+    temp_position = COLLISION_MANAGER->getScreenCoordinatesFrom3DPosition( vector3df( 0, 240, TEXT_Z + z_offset ) );
+    button_start = gui_environment->addButton( rect<s32>( position2d<s32>( temp_position.X - ( BUTTON_WIDTH / 2 ),
+                                                                           temp_position.Y - ( BUTTON_HEIGHT / 2 ) ),
+                                                          dimension2d<u32>( BUTTON_WIDTH, BUTTON_HEIGHT ) ),
+                                               0,
+                                               BUTTON_START,
+                                               L"New Game" );
+    temp_position = COLLISION_MANAGER->getScreenCoordinatesFrom3DPosition( vector3df( 0, 80, TEXT_Z + z_offset ) );
+    button_resume = gui_environment->addButton( rect<s32>( position2d<s32>( temp_position.X - ( BUTTON_WIDTH / 2 ),
+                                                                            temp_position.Y - ( BUTTON_HEIGHT / 2 ) ),
+                                                           dimension2d<u32>( BUTTON_WIDTH, BUTTON_HEIGHT ) ),
+                                                0,
+                                                BUTTON_RESUME,
+	                                            L"Resume Game" );
+    temp_position = COLLISION_MANAGER->getScreenCoordinatesFrom3DPosition( vector3df( 0, -80, TEXT_Z + z_offset ) );
+    button_options = gui_environment->addButton( rect<s32>( position2d<s32>( temp_position.X - ( BUTTON_WIDTH / 2 ),
+                                                                             temp_position.Y - ( BUTTON_HEIGHT / 2 ) ),
+                                                            dimension2d<u32>( BUTTON_WIDTH, BUTTON_HEIGHT ) ),
+	                                             0,
+	                                             BUTTON_OPTIONS,
+	                                             L"Game Options" );
+    temp_position = COLLISION_MANAGER->getScreenCoordinatesFrom3DPosition( vector3df( 0, -240, TEXT_Z + z_offset ) );
+    button_exit = gui_environment->addButton( rect<s32>( position2d<s32>( temp_position.X - ( BUTTON_WIDTH / 2 ),
+                                                                          temp_position.Y - ( BUTTON_HEIGHT / 2 ) ),
+                                                         dimension2d<u32>( BUTTON_WIDTH, BUTTON_HEIGHT ) ),
+	                                          0,
+	                                          BUTTON_EXIT,
+	                                          L"Exit Game" );
+    
+    hide_main_menu();
+}
+
 void UserInterface::initialize_skin()
 {
     skin = gui_environment->getSkin();
@@ -100,8 +154,8 @@ void UserInterface::initialize_skin()
     skin->setColor( EGDC_3D_HIGH_LIGHT, COLOR_DKGRAY );
 }
 
-void UserInterface::initialize_widgets()
-{
+void UserInterface::initialize_title_screen()
+{    
     textnode_continue = scene_manager->addTextSceneNode( font_main,
                                                          STRING_CONTINUE,
                                                          COLOR_WHITE,
@@ -112,4 +166,32 @@ void UserInterface::initialize_widgets()
     textnode_continue->setVisible( false );
     
     flashing_text = textnode_continue;
+    
+    title_screen_shown = false;
+}
+
+void UserInterface::initialize_widgets()
+{
+    ISceneCollisionManager* collision_manager = scene_manager->getSceneCollisionManager();
+    
+    u32 button_width = font_main->getDimension( L"X" ).Width * 10;
+    u32 button_height = font_main->getDimension( L"X" ).Height * 1.75;
+    
+    initialize_title_screen();
+    initialize_main_menu( collision_manager, button_width, button_height );
+}
+
+void UserInterface::show_main_menu()
+{
+    button_exit->setVisible( true );
+    button_options->setVisible( true );
+    button_resume->setVisible( true );
+    button_start->setVisible( true );
+    
+    if( !title_screen_shown )
+    {
+        flashing_text = NULL;
+        textnode_continue->setVisible( false );
+        title_screen_shown = true;
+    }
 }

@@ -24,6 +24,12 @@ enum Screen
     OPTIONS
 };
 
+// GUI Buttons
+#define BUTTON_START       100
+#define BUTTON_RESUME      110
+#define BUTTON_OPTIONS     120
+#define BUTTON_EXIT        999
+
 // Colors                          A    R    G    B
 #define COLOR_TRANSPARENT  SColor(  0,   0,   0,   0)
 #define COLOR_BLACK        SColor(255,   0,   0,   0)
@@ -106,6 +112,8 @@ enum Screen
 #define X_Y_WEAPON         STAT_VALUE_X,  -40
 #define X_Y_DAMAGE         STAT_VALUE_X, -120
 #define X_Y_UNSPENT        STAT_VALUE_X, -200
+
+// Root Nodes
 
 // Strings
 #define STRING_AGILITY     L"Agility:"
