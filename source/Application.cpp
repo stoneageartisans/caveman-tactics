@@ -66,6 +66,23 @@ bool Application::OnEvent( const SEvent& EVENT )
             }
             break;
         case MAIN_MENU:
+            switch( EVENT.EventType )
+            {
+                case EET_GUI_EVENT:
+                    switch( EVENT.GUIEvent.EventType )
+                    {
+                        case EGET_BUTTON_CLICKED:
+                            switch( EVENT.GUIEvent.Caller->getID() )
+                            {
+                                case BUTTON_EXIT:
+                                    exit();
+                                    was_handled = true;
+                                    break;
+                            }
+                            break;
+                    }
+                    break;
+            }
             break;
         case CHARACTER:
             break;
