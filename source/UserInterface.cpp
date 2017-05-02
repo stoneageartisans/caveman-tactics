@@ -10,9 +10,9 @@
  ******************/
 
 // Constructor
-UserInterface::UserInterface( IrrlichtDevice* IRRLICHT_DEVICE, f32 Z_OFFSET )
+UserInterface::UserInterface( IrrlichtDevice* IRRLICHT_DEVICE, f32 Z_OFFSET, Character* PLAYER )
 {
-    initialize( IRRLICHT_DEVICE, Z_OFFSET );
+    initialize( IRRLICHT_DEVICE, Z_OFFSET, PLAYER );
 }
 
 // Destructor
@@ -37,13 +37,17 @@ void UserInterface::set_view( Screen SCREEN )
 {
     switch( SCREEN )
     {
-        case MAIN_MENU:            
+        case MAIN_MENU:
+            hide_character_screen();
             show_main_menu();
             break;
         case GAME:
             hide_main_menu();
+            hide_character_screen();
             break;
         case CHARACTER:
+            hide_main_menu();
+            show_character_screen();
             break;
         case OPTIONS:
             break;
@@ -63,6 +67,30 @@ void UserInterface::dispose()
     // TODO
 }
 
+void UserInterface::hide_character_screen()
+{
+    textnode_brawn->setVisible( false );
+    textnode_agility->setVisible( false );
+    textnode_brains->setVisible( false );
+    textnode_stamina->setVisible( false );
+    textnode_hit_points->setVisible( false );
+    textnode_defense->setVisible( false );
+    textnode_action->setVisible( false );
+    textnode_damage->setVisible( false );
+    textnode_weapon->setVisible( false );
+    textnode_unspent->setVisible( false );
+    textnode_brawn_lbl->setVisible( false );
+    textnode_agility_lbl->setVisible( false );
+    textnode_brains_lbl->setVisible( false );
+    textnode_stamina_lbl->setVisible( false );
+    textnode_hit_points_lbl->setVisible( false );
+    textnode_defense_lbl->setVisible( false );
+    textnode_action_lbl->setVisible( false );
+    textnode_damage_lbl->setVisible( false );
+    textnode_weapon_lbl->setVisible( false );
+    textnode_unspent_lbl->setVisible( false );
+}
+
 void UserInterface::hide_main_menu()
 {
     button_exit->setVisible( false );
@@ -71,8 +99,9 @@ void UserInterface::hide_main_menu()
     button_start->setVisible( false );
 }
 
-void UserInterface::initialize( IrrlichtDevice* IRRLICHT_DEVICE, f32 Z_OFFSET )
+void UserInterface::initialize( IrrlichtDevice* IRRLICHT_DEVICE, f32 Z_OFFSET, Character* PLAYER )
 {
+    player = PLAYER;    
     z_offset = Z_OFFSET;
     
     video_driver = IRRLICHT_DEVICE->getVideoDriver();
@@ -85,6 +114,159 @@ void UserInterface::initialize( IrrlichtDevice* IRRLICHT_DEVICE, f32 Z_OFFSET )
     initialize_fonts();
     initialize_skin();
     initialize_widgets();
+}
+
+void UserInterface::initialize_character_display()
+{
+    textnode_brawn_lbl = scene_manager->addTextSceneNode( font_main,
+                                                          STRING_BRAWN,
+                                                          COLOR_BROWN,
+                                                          0,
+                                                          vector3df( X_Y_BRAWN_LBL, TEXT_Z + z_offset ),
+                                                          -1 );
+    textnode_brawn_lbl->setVisible(false);
+    textnode_agility_lbl = scene_manager->addTextSceneNode( font_main,
+                                                            STRING_AGILITY,
+                                                            COLOR_BROWN,
+                                                            0,
+                                                            vector3df( X_Y_AGILITY_LBL, TEXT_Z + z_offset ),
+                                                            -1 );
+    textnode_agility_lbl->setVisible( false );
+    textnode_brains_lbl = scene_manager->addTextSceneNode( font_main,
+                                                           STRING_BRAINS,
+                                                           COLOR_BROWN,
+                                                           0,
+                                                           vector3df( X_Y_BRAINS_LBL, TEXT_Z + z_offset ),
+                                                           -1 );
+    textnode_brains_lbl->setVisible(false);
+    textnode_stamina_lbl = scene_manager->addTextSceneNode( font_main,
+                                                            STRING_STAMINA,
+                                                            COLOR_BROWN,
+                                                            0,
+                                                            vector3df( X_Y_STAMINA_LBL, TEXT_Z + z_offset ),
+                                                            -1 );
+    textnode_stamina_lbl->setVisible(false);
+    textnode_hit_points_lbl = scene_manager->addTextSceneNode( font_main,
+                                                               STRING_HIT_POINTS,
+                                                               COLOR_BROWN,
+                                                               0,
+                                                               vector3df( X_Y_HIT_POINTS_LBL, TEXT_Z + z_offset ),
+                                                               -1 );
+    textnode_hit_points_lbl->setVisible(false);    
+    textnode_action_lbl = scene_manager->addTextSceneNode( font_main,
+                                                           STRING_ACTION,
+                                                           COLOR_BROWN,
+                                                           0,
+                                                           vector3df( X_Y_ACTION_LBL, TEXT_Z + z_offset ),
+                                                           -1 );
+    textnode_action_lbl->setVisible(false);
+    textnode_defense_lbl = scene_manager->addTextSceneNode( font_main,
+                                                            STRING_DEFENSE,
+                                                            COLOR_BROWN,
+                                                            0,
+                                                            vector3df( X_Y_DEFENSE_LBL, TEXT_Z + z_offset ),
+                                                            -1 );
+    textnode_defense_lbl->setVisible(false);
+    textnode_damage_lbl = scene_manager->addTextSceneNode( font_main,
+                                                           STRING_DAMAGE,
+                                                           COLOR_BROWN,
+                                                           0,
+                                                           vector3df( X_Y_DAMAGE_LBL, TEXT_Z + z_offset ),
+                                                           -1 );
+    textnode_damage_lbl->setVisible(false);
+    textnode_weapon_lbl = scene_manager->addTextSceneNode( font_main,
+                                                           STRING_WEAPON,
+                                                           COLOR_BROWN,
+                                                           0,
+                                                           vector3df( X_Y_WEAPON_LBL, TEXT_Z + z_offset ),
+                                                           -1 );
+    textnode_weapon_lbl->setVisible(false);
+    textnode_unspent_lbl = scene_manager->addTextSceneNode( font_main,
+                                                            STRING_UNSPENT,
+                                                            COLOR_BROWN,
+                                                            0,
+                                                            vector3df( X_Y_UNSPENT_LBL, TEXT_Z + z_offset ),
+                                                            -1 );
+    textnode_unspent_lbl->setVisible(false);
+    textnode_brawn = scene_manager->addTextSceneNode( font_main,
+                                                      stringw( player->get_brawn() ).c_str(),
+                                                      COLOR_BLACK,
+                                                      0,
+                                                      vector3df( X_Y_BRAWN, TEXT_Z + z_offset ),
+                                                      -1 );
+    textnode_brawn->setVisible(false);
+    textnode_agility = scene_manager->addTextSceneNode( font_main,
+                                                        stringw( player->get_agility() ).c_str(),
+                                                        COLOR_BLACK,
+                                                        0,
+                                                        vector3df( X_Y_AGILITY, TEXT_Z + z_offset ),
+                                                        -1 );
+    textnode_agility->setVisible(false);
+    textnode_brains = scene_manager->addTextSceneNode( font_main,
+                                                       stringw( player->get_brains() ).c_str(),
+                                                       COLOR_BLACK,
+                                                       0,
+                                                       vector3df( X_Y_BRAINS, TEXT_Z + z_offset ),
+                                                       -1 );
+    textnode_brains->setVisible(false);
+    textnode_stamina = scene_manager->addTextSceneNode( font_main,
+                                                        stringw( player->get_stamina() ).c_str(),
+                                                        COLOR_BLACK,
+                                                        0,
+                                                        vector3df( X_Y_STAMINA, TEXT_Z + z_offset ),
+                                                        -1 );
+    textnode_stamina->setVisible(false);
+    stringw_hit_points = new stringw( player->get_hit_points() - player->get_wounds() );
+    *stringw_hit_points += L" / ";
+    *stringw_hit_points += stringw( player->get_hit_points() ).c_str();
+    textnode_hit_points = scene_manager->addTextSceneNode( font_main,
+                                                           stringw_hit_points->c_str(),
+                                                           COLOR_BLACK,
+                                                           0,
+                                                           vector3df( X_Y_HIT_POINTS, TEXT_Z + z_offset ),
+                                                           -1 );
+    textnode_hit_points->setVisible(false);
+    stringw_action = new stringw( player->get_action_points() );
+    *stringw_action += L" / ";
+    *stringw_action += stringw( player->get_action() ).c_str();
+    textnode_action = scene_manager->addTextSceneNode( font_main,
+                                                       stringw_action->c_str(),
+                                                       COLOR_BLACK,
+                                                       0,
+                                                       vector3df( X_Y_ACTION, TEXT_Z + z_offset ),
+                                                       -1 );
+    textnode_action->setVisible(false);
+    textnode_defense = scene_manager->addTextSceneNode( font_main,
+                                                        stringw( player->get_defense() ).c_str(),
+                                                        COLOR_BLACK,
+                                                        0,
+                                                        vector3df( X_Y_DEFENSE, TEXT_Z + z_offset ),
+                                                        -1 );
+    textnode_defense->setVisible(false);
+    textnode_weapon = scene_manager->addTextSceneNode( font_main,
+                                                       stringw( WEAPON_NAME[player->get_weapon()] ).c_str(),
+                                                       COLOR_BLACK,
+                                                       0,
+                                                       vector3df( X_Y_WEAPON, TEXT_Z + z_offset ),
+                                                       -1 );
+    textnode_weapon->setVisible( false );
+    stringw_damage = new stringw( player->get_damage_min() );
+    *stringw_damage += L" - ";
+    *stringw_damage += stringw( player->get_damage_max() ).c_str();
+    textnode_damage = scene_manager->addTextSceneNode( font_main,
+                                                       stringw_damage->c_str(),
+                                                       COLOR_BLACK,
+                                                       0,
+                                                       vector3df( X_Y_DAMAGE, TEXT_Z + z_offset ),
+                                                       -1 );
+    textnode_damage->setVisible( false );
+    textnode_unspent = scene_manager->addTextSceneNode( font_main,
+                                                        stringw( player->get_unspent_points() ).c_str(),
+                                                        COLOR_BLACK,
+                                                        0,
+                                                        vector3df( X_Y_UNSPENT, TEXT_Z + z_offset ),
+                                                        -1 );
+    textnode_unspent->setVisible( false );
 }
 
 void UserInterface::initialize_fonts()
@@ -125,6 +307,7 @@ void UserInterface::initialize_main_menu( ISceneCollisionManager* COLLISION_MANA
                                                 0,
                                                 BUTTON_RESUME,
 	                                            L"Resume Game" );
+    button_resume->setEnabled( false ); // temporary
     temp_position = COLLISION_MANAGER->getScreenCoordinatesFrom3DPosition( vector3df( 0, -80, TEXT_Z + z_offset ) );
     button_options = gui_environment->addButton( rect<s32>( position2d<s32>( temp_position.X - ( BUTTON_WIDTH / 2 ),
                                                                              temp_position.Y - ( BUTTON_HEIGHT / 2 ) ),
@@ -132,6 +315,7 @@ void UserInterface::initialize_main_menu( ISceneCollisionManager* COLLISION_MANA
 	                                             0,
 	                                             BUTTON_OPTIONS,
 	                                             L"Game Options" );
+    button_options->setEnabled( false ); // temporary
     temp_position = COLLISION_MANAGER->getScreenCoordinatesFrom3DPosition( vector3df( 0, -240, TEXT_Z + z_offset ) );
     button_exit = gui_environment->addButton( rect<s32>( position2d<s32>( temp_position.X - ( BUTTON_WIDTH / 2 ),
                                                                           temp_position.Y - ( BUTTON_HEIGHT / 2 ) ),
@@ -179,6 +363,33 @@ void UserInterface::initialize_widgets()
     
     initialize_title_screen();
     initialize_main_menu( collision_manager, button_width, button_height );
+    initialize_character_display();
+}
+
+void UserInterface::show_character_screen()
+{
+    textnode_brawn->setVisible( true );
+    textnode_agility->setVisible( true );
+    textnode_brains->setVisible( true );
+    textnode_stamina->setVisible( true );
+    textnode_hit_points->setVisible( true );
+    textnode_defense->setVisible( true );
+    textnode_weapon->setVisible( true );
+    textnode_unspent->setVisible( true );
+    textnode_action->setVisible( true );
+    textnode_damage->setVisible( true );
+    textnode_weapon->setVisible( true );
+    textnode_unspent->setVisible( true );    
+    textnode_brawn_lbl->setVisible( true );
+    textnode_agility_lbl->setVisible( true );
+    textnode_brains_lbl->setVisible( true );
+    textnode_stamina_lbl->setVisible( true );
+    textnode_hit_points_lbl->setVisible( true );
+    textnode_defense_lbl->setVisible( true );
+    textnode_action_lbl->setVisible( true );
+    textnode_damage_lbl->setVisible( true );
+    textnode_weapon_lbl->setVisible( true );
+    textnode_unspent_lbl->setVisible( true );
 }
 
 void UserInterface::show_main_menu()

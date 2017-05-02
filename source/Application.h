@@ -7,6 +7,7 @@
 #define APPLICATION_H
 
 #include "constants.h"
+#include "Character.h"
 #include "UserInterface.h"
 #include "Utilities.h"
 
@@ -44,6 +45,7 @@ class Application : public IEventReceiver
         s32                   mousemap_x;
         s32                   mousemap_y;
         IMeshSceneNode*       node_display_plane;
+        Character*            player;
         rect<s32>*            rect_screen;
         ISceneManager*        scene_manager;
         dimension2d<u32>*     screen_dimensions;
@@ -68,6 +70,7 @@ class Application : public IEventReceiver
         void initialize_camera();
         void initialize_display();
         void initialize_irrlicht();
+        void initialize_player();
         void initialize_settings();
         void initialize_values();
         void load_data( const char* FILENAME );

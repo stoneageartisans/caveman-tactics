@@ -97,7 +97,7 @@ enum Screen
 #define X_Y_BRAINS_LBL     STAT_LABEL_X,  360
 #define X_Y_STAMINA_LBL    STAT_LABEL_X,  280
 #define X_Y_HIT_POINTS_LBL STAT_LABEL_X,  200
-#define X_Y_MOVEMENT_LBL   STAT_LABEL_X,  120
+#define X_Y_ACTION_LBL     STAT_LABEL_X,  120
 #define X_Y_DEFENSE_LBL    STAT_LABEL_X,   40
 #define X_Y_WEAPON_LBL     STAT_LABEL_X,  -40
 #define X_Y_DAMAGE_LBL     STAT_LABEL_X, -120
@@ -107,7 +107,7 @@ enum Screen
 #define X_Y_BRAINS         STAT_VALUE_X,  360
 #define X_Y_STAMINA        STAT_VALUE_X,  280
 #define X_Y_HIT_POINTS     STAT_VALUE_X,  200
-#define X_Y_MOVEMENT       STAT_VALUE_X,  120
+#define X_Y_ACTION         STAT_VALUE_X,  120
 #define X_Y_DEFENSE        STAT_VALUE_X,   40
 #define X_Y_WEAPON         STAT_VALUE_X,  -40
 #define X_Y_DAMAGE         STAT_VALUE_X, -120
@@ -123,7 +123,7 @@ enum Screen
 #define STRING_DAMAGE      L"Damage:"
 #define STRING_DEFENSE     L"Defense:"
 #define STRING_HIT_POINTS  L"Hit Points:"
-#define STRING_MOVEMENT    L"Movement:"
+#define STRING_ACTION      L"Action Points:"
 #define STRING_STAMINA     L"Stamina:"
 #define STRING_UNSPENT     L"Unspent Points:"
 #define STRING_WEAPON      L"Weapon:"
@@ -138,5 +138,18 @@ enum Screen
 #define Z_OFFSET_1_333     165.0
 #define Z_OFFSET_1_600       0.0
 #define Z_OFFSET_1_777       0.0
+
+// Weapons
+const static char* WEAPON_NAME[] =
+{
+    "Hands",
+    "Knife",
+    "Club",    
+    "Spear"
+};
+#define WEAPON_HANDS            0
+#define WEAPON_KNIFE            1
+#define WEAPON_CLUB             2
+#define WEAPON_SPEAR            3
 
 #endif /* CONSTANTS_H */

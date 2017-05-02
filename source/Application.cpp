@@ -56,8 +56,6 @@ bool Application::OnEvent( const SEvent& EVENT )
                         case KEY_ESCAPE:
                             if( !EVENT.KeyInput.PressedDown )
                             {
-                                //hide_game_screen();
-                                //show_main_menu();
                                 was_handled = true;
                             }
                             break;
@@ -78,6 +76,12 @@ bool Application::OnEvent( const SEvent& EVENT )
                                     exit();
                                     was_handled = true;
                                     break;
+                                case BUTTON_START:
+                                    current_screen = CHARACTER;
+                                    node_display_plane->setMaterialTexture( 0, texture_game_screen );
+                                    ui->set_view( current_screen );
+                                    was_handled = true;
+                                    break;
                             }
                             break;
                     }
@@ -85,6 +89,23 @@ bool Application::OnEvent( const SEvent& EVENT )
             }
             break;
         case CHARACTER:
+            switch( EVENT.EventType )
+            {
+                case EET_KEY_INPUT_EVENT:
+                    switch( EVENT.KeyInput.Key )
+                    {
+                        case KEY_ESCAPE:
+                            if( !EVENT.KeyInput.PressedDown )
+                            {
+                                current_screen = MAIN_MENU;
+                                node_display_plane->setMaterialTexture( 0, texture_menu_screen );
+                                ui->set_view( current_screen );
+                                was_handled = true;
+                            }
+                            break;
+                    }
+                    break;
+            }
             break;
         case TITLE:
             switch( EVENT.EventType )
@@ -189,6 +210,7 @@ void Application::dispose()
 {
     delete color_background;
     delete color_white;
+    delete player;
     delete rect_screen;
     delete ui;
     delete utilities;
@@ -224,9 +246,11 @@ void Application::initialize()
     
     show_splash_screen();
     
+    initialize_player();
+    
     load_resources();
     
-    ui = new UserInterface( irrlicht_device, z_offset );
+    ui = new UserInterface( irrlicht_device, z_offset, player );
 }
 
 void Application::initialize_camera()
@@ -293,6 +317,11 @@ void Application::initialize_irrlicht()
     
     scene_manager = irrlicht_device->getSceneManager();
     gui_environment = irrlicht_device->getGUIEnvironment();
+}
+
+void Application::initialize_player()
+{
+    player = new Character();
 }
 
 void Application::initialize_settings()

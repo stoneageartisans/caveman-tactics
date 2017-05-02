@@ -7,6 +7,7 @@
 #define USERINTERFACE_H
 
 #include "constants.h"
+#include "Character.h"
 
 #include <irrlicht.h>
 
@@ -20,7 +21,7 @@ using namespace gui;
 class UserInterface
 {
     public:
-        UserInterface( IrrlichtDevice* IRRLICHT_DEVICE, f32 Z_OFFSET );
+        UserInterface( IrrlichtDevice* IRRLICHT_DEVICE, f32 Z_OFFSET, Character* PLAYER );
         ~UserInterface();
         void flash_text();
         void set_view( Screen SCREEN );
@@ -30,6 +31,7 @@ class UserInterface
         IGUIButton*      button_options;
         IGUIButton*      button_resume;     
         IGUIButton*      button_start;
+        Character*       player;
         ITextSceneNode*  flashing_text;
         IGUIFont*        font_main;
         IGUIEnvironment* gui_environment;
@@ -37,14 +39,39 @@ class UserInterface
         s32              screen_height;
         s32              screen_width;
         IGUISkin*        skin;
+        stringw*         stringw_action;
+        stringw*         stringw_damage;
+        stringw*         stringw_hit_points;
+        ITextSceneNode*  textnode_action;
+        ITextSceneNode*  textnode_action_lbl;
+        ITextSceneNode*  textnode_agility;
+        ITextSceneNode*  textnode_agility_lbl;
+        ITextSceneNode*  textnode_brains;
+        ITextSceneNode*  textnode_brains_lbl;
+        ITextSceneNode*  textnode_brawn;
+        ITextSceneNode*  textnode_brawn_lbl;
         ITextSceneNode*  textnode_continue;
+        ITextSceneNode*  textnode_stamina;
+        ITextSceneNode*  textnode_stamina_lbl;        
+        ITextSceneNode*  textnode_hit_points;
+        ITextSceneNode*  textnode_hit_points_lbl;        
+        ITextSceneNode*  textnode_defense;
+        ITextSceneNode*  textnode_defense_lbl;
+        ITextSceneNode*  textnode_weapon;
+        ITextSceneNode*  textnode_weapon_lbl;
+        ITextSceneNode*  textnode_damage;
+        ITextSceneNode*  textnode_damage_lbl;        
+        ITextSceneNode*  textnode_unspent;
+        ITextSceneNode*  textnode_unspent_lbl;
         bool             title_screen_shown;
         IVideoDriver*    video_driver;
         f32              z_offset;
         
         void dispose();
+        void hide_character_screen();
         void hide_main_menu();
-        void initialize( IrrlichtDevice* IRRLICHT_DEVICE, f32 Z_OFFSET );
+        void initialize( IrrlichtDevice* IRRLICHT_DEVICE, f32 Z_OFFSET, Character* PLAYER );
+        void initialize_character_display();
         void initialize_fonts();
         void initialize_main_menu( ISceneCollisionManager* COLLISION_MANAGER,
                                    u32 BUTTON_WIDTH,
@@ -52,6 +79,7 @@ class UserInterface
         void initialize_skin();
         void initialize_title_screen();
         void initialize_widgets();
+        void show_character_screen();
         void show_main_menu();
 };
 
