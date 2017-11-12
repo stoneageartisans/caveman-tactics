@@ -5,24 +5,9 @@
 
 #include "Utilities.h"
 
-#include <cstdlib>
-#include <time.h>
-
 /******************
  * Public Methods *
  ******************/
-
-// Constructor
-Utilities::Utilities()
-{
-    initialize();
-}
-
-// Destructor
-Utilities::~Utilities()
-{
-    dispose();
-}
 
 // Returns the highger of 3 signed integers
 s32 Utilities::get_highest_of_3( s32 VALUE1, s32 VALUE2, s32 VALUE3 )
@@ -55,18 +40,4 @@ s32 Utilities::get_highest_of_3( s32 VALUE1, s32 VALUE2, s32 VALUE3 )
 s32 Utilities::get_random( s32 LOWEST, s32 HIGHEST )
 {
     return ( rand() % ( HIGHEST - LOWEST + 1 ) ) + LOWEST;
-}
-
-/*******************
- * Private Methods *
- *******************/
-
-void Utilities::dispose()
-{
-    // TODO
-}
-
-void Utilities::initialize()
-{
-    srand( time( NULL ) );
 }

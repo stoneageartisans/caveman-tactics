@@ -77,9 +77,10 @@ bool Application::OnEvent( const SEvent& EVENT )
                                     was_handled = true;
                                     break;
                                 case BUTTON_START:
+                                    return_screen = MAIN_MENU;
                                     current_screen = CHARACTER;
                                     node_display_plane->setMaterialTexture( 0, texture_game_screen );
-                                    ui->set_view( current_screen );
+                                    ui.set_view( current_screen );
                                     was_handled = true;
                                     break;
                             }
@@ -97,9 +98,10 @@ bool Application::OnEvent( const SEvent& EVENT )
                         case KEY_ESCAPE:
                             if( !EVENT.KeyInput.PressedDown )
                             {
+                                return_screen = current_screen;
                                 current_screen = MAIN_MENU;
                                 node_display_plane->setMaterialTexture( 0, texture_menu_screen );
-                                ui->set_view( current_screen );
+                                ui.set_view( current_screen );
                                 was_handled = true;
                             }
                             break;
@@ -115,7 +117,7 @@ bool Application::OnEvent( const SEvent& EVENT )
                     {
                         current_screen = MAIN_MENU;
                         node_display_plane->setMaterialTexture( 0, texture_menu_screen );
-                        ui->set_view( current_screen );
+                        ui.set_view( current_screen );
                         was_handled = true;
                     }
                     break;
@@ -126,7 +128,7 @@ bool Application::OnEvent( const SEvent& EVENT )
                         {
                             current_screen = MAIN_MENU;
                             node_display_plane->setMaterialTexture( 0, texture_menu_screen );
-                            ui->set_view( current_screen );
+                            ui.set_view( current_screen );
                             was_handled = true;
                         }
                     }
@@ -149,38 +151,38 @@ void Application::run()
         switch( current_screen )
         {
             case GAME:
-                video_driver->beginScene(true, true, *color_background);
+                video_driver->beginScene(true, true, color_background);
                 scene_manager->drawAll();
                 gui_environment->drawAll();
                 video_driver->endScene();
                 break;
             case MAIN_MENU:
-                video_driver->beginScene(true, true, *color_background);
+                video_driver->beginScene(true, true, color_background);
                 scene_manager->drawAll();
                 gui_environment->drawAll();
                 video_driver->endScene();
                 break;
             case CHARACTER:
-                video_driver->beginScene(true, true, *color_background);
+                video_driver->beginScene(true, true, color_background);
                 scene_manager->drawAll();
                 gui_environment->drawAll();
                 video_driver->endScene();
                 break;
             case TITLE:
-                video_driver->beginScene(true, true, *color_background);
+                video_driver->beginScene(true, true, color_background);
                 scene_manager->drawAll();
                 gui_environment->drawAll();
                 video_driver->endScene();
                 check_timer();
                 break;
             case OPTIONS:
-                video_driver->beginScene(true, true, *color_background);
+                video_driver->beginScene(true, true, color_background);
                 scene_manager->drawAll();
                 gui_environment->drawAll();
                 video_driver->endScene();
                 break;
             case NO_SCREEN:
-                video_driver->beginScene( true, true, *color_background );
+                video_driver->beginScene( true, true, color_background );
                 scene_manager->drawAll();
                 video_driver->endScene();
                 check_timer();
@@ -208,12 +210,7 @@ void Application::check_timer()
 
 void Application::dispose()
 {
-    delete color_background;
-    delete color_white;
-    delete player;
-    delete rect_screen;
-    delete ui;
-    delete utilities;
+    // TODO
 }
 
 void Application::execute_process( Process PROCESS )
@@ -224,7 +221,7 @@ void Application::execute_process( Process PROCESS )
             // Do nothing
             break;
         case FLASH_TEXT:
-            ui->flash_text();
+            ui.flash_text();
             start_timer( DELAY_TEXT_FLASH, FLASH_TEXT );
             break;
         case SHOW_TITLE_SCREEN:
@@ -236,8 +233,6 @@ void Application::execute_process( Process PROCESS )
 
 void Application::initialize()
 {
-    utilities = new Utilities();
-        
     initialize_settings();
     initialize_irrlicht();
     initialize_values();
@@ -250,7 +245,7 @@ void Application::initialize()
     
     load_resources();
     
-    ui = new UserInterface( irrlicht_device, z_offset, player );
+    ui = UserInterface( irrlicht_device, z_offset, &player );
 }
 
 void Application::initialize_camera()
@@ -292,8 +287,7 @@ void Application::initialize_display()
         z_offset = Z_OFFSET_1_777;
     }
         
-    rect_screen = new rect<s32>( vector2d<s32>(0, 0),
-                                 vector2d<s32>( screen_width, screen_height ) );
+    rect_screen = rect<s32>( vector2d<s32>(0, 0), vector2d<s32>( screen_width, screen_height ) );
     
     node_display_plane = scene_manager->addMeshSceneNode( scene_manager->getMesh( DISPLAY_PLANE ) );
     node_display_plane->setMaterialFlag( EMF_LIGHTING, true );
@@ -304,7 +298,7 @@ void Application::initialize_display()
 void Application::initialize_irrlicht()
 {
     irrlicht_device = createDevice( driver_type,
-                                    *screen_dimensions,
+                                    screen_dimensions,
                                     BIT_DEPTH,
                                     display_type );    
     irrlicht_device->setResizable( false );
@@ -321,7 +315,7 @@ void Application::initialize_irrlicht()
 
 void Application::initialize_player()
 {
-    player = new Character();
+    player = Character();
 }
 
 void Application::initialize_settings()
@@ -388,20 +382,21 @@ void Application::initialize_settings()
     
     delete value;
     
-    screen_dimensions = new dimension2d<u32>( screen_width, screen_height );
+    screen_dimensions = dimension2d<u32>( screen_width, screen_height );
     
     temp_device->drop();
 }
 
 void Application::initialize_values()
 {
-    color_background = new COLOR_DKGRAY;
-    color_white = new COLOR_WHITE;
+    color_background = COLOR_DKGRAY;
+    color_white = COLOR_WHITE;
     timer_is_running = false;
     timer_delay = 0;
     timer_start = 0;
     delayed_process = NO_PROCESS;
     current_screen = NO_SCREEN;
+    return_screen = NO_SCREEN;
 }
 
 // Loads data from the specified file into data map
@@ -441,7 +436,7 @@ void Application::reset_timer()
 
 void Application::show_splash_screen()
 {
-    video_driver->beginScene( true, true, *color_background );
+    video_driver->beginScene( true, true, color_background );
     scene_manager->drawAll();
     video_driver->endScene();
     
@@ -452,7 +447,7 @@ void Application::show_title_screen()
 {
     node_display_plane->setMaterialTexture( 0, video_driver->getTexture( TITLE_IMAGE ) );
     
-    video_driver->beginScene( true, true, *color_background );
+    video_driver->beginScene( true, true, color_background );
     scene_manager->drawAll();
     gui_environment->drawAll();
     video_driver->endScene();

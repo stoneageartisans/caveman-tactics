@@ -31,8 +31,8 @@ class Application : public IEventReceiver
         
     private:
         ICameraSceneNode*     camera;
-        SColor*               color_background;
-        SColor*               color_white;
+        SColor                color_background;
+        SColor                color_white;
         Screen                current_screen;
         map<stringc, stringc> data;
         Process               delayed_process;
@@ -45,10 +45,11 @@ class Application : public IEventReceiver
         s32                   mousemap_x;
         s32                   mousemap_y;
         IMeshSceneNode*       node_display_plane;
-        Character*            player;
-        rect<s32>*            rect_screen;
+        Character             player;
+        rect<s32>             rect_screen;
+        Screen                return_screen;
         ISceneManager*        scene_manager;
-        dimension2d<u32>*     screen_dimensions;
+        dimension2d<u32>      screen_dimensions;
         s32                   screen_height;
         s32                   screen_width;
         ITexture*             texture_game_screen;
@@ -58,8 +59,7 @@ class Application : public IEventReceiver
         u32                   timer_delay;
         bool                  timer_is_running;
         u32                   timer_start;
-        UserInterface*        ui;
-        Utilities*            utilities;
+        UserInterface         ui;
         IVideoDriver*         video_driver;
         f32                   z_offset;
         
@@ -82,4 +82,3 @@ class Application : public IEventReceiver
 };
 
 #endif /* APPLICATION_H */
-

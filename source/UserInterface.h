@@ -21,12 +21,21 @@ using namespace gui;
 class UserInterface
 {
     public:
+        UserInterface();
         UserInterface( IrrlichtDevice* IRRLICHT_DEVICE, f32 Z_OFFSET, Character* PLAYER );
         ~UserInterface();
         void flash_text();
         void set_view( Screen SCREEN );
         
     private:
+        IGUIButton*      button_agility_minus;
+        IGUIButton*      button_agility_plus;
+        IGUIButton*      button_brains_minus;
+        IGUIButton*      button_brains_plus;
+        IGUIButton*      button_brawn_minus;
+        IGUIButton*      button_brawn_plus;
+        IGUIButton*      button_stamina_minus;
+        IGUIButton*      button_stamina_plus;
         IGUIButton*      button_exit;
         IGUIButton*      button_options;
         IGUIButton*      button_resume;     
@@ -39,9 +48,9 @@ class UserInterface
         s32              screen_height;
         s32              screen_width;
         IGUISkin*        skin;
-        stringw*         stringw_action;
-        stringw*         stringw_damage;
-        stringw*         stringw_hit_points;
+        stringw          stringw_action;
+        stringw          stringw_damage;
+        stringw          stringw_hit_points;
         ITextSceneNode*  textnode_action;
         ITextSceneNode*  textnode_action_lbl;
         ITextSceneNode*  textnode_agility;
@@ -71,11 +80,9 @@ class UserInterface
         void hide_character_screen();
         void hide_main_menu();
         void initialize( IrrlichtDevice* IRRLICHT_DEVICE, f32 Z_OFFSET, Character* PLAYER );
-        void initialize_character_display();
+        void initialize_character_display( );
         void initialize_fonts();
-        void initialize_main_menu( ISceneCollisionManager* COLLISION_MANAGER,
-                                   u32 BUTTON_WIDTH,
-                                   u32 BUTTON_HEIGHT );
+        void initialize_main_menu();
         void initialize_skin();
         void initialize_title_screen();
         void initialize_widgets();
@@ -84,4 +91,3 @@ class UserInterface
 };
 
 #endif /* USERINTERFACE_H */
-

@@ -7,11 +7,9 @@
 
 int main()
 {
-    Application* app = new Application();
+    Application app;
     
-    app->run();
-    
-    delete app;
+    app.run();
     
     return 0;
 }

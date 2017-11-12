@@ -85,4 +85,3 @@ class Character
 };
 
 #endif /* PLAYER_H */
-
