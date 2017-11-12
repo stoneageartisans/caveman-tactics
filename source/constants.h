@@ -57,6 +57,7 @@ enum Screen
 #define COLOR_DEVGRAY     SColor(255,  39,  39,  41)
 
 // Files
+#define FILE_MUSIC     "sound/music.mp3"
 #define FILE_RESOURCES "resources.zip"
 #define FILE_SETTINGS  "data/settings.dat"
 
@@ -152,6 +153,10 @@ enum Screen
 #define MENU_BUTTON_WIDTH  10
 #define STAT_BUTTON_HEIGHT  1
 #define STAT_BUTTON_WIDTH   2
+
+// Sound
+#define SND_DEVICE    -1
+#define SND_FREQ   44100
 
 // Weapons
 const static char* WEAPON_NAME[] =

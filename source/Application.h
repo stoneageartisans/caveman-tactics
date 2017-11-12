@@ -8,6 +8,7 @@
 
 #include "constants.h"
 #include "Character.h"
+#include "Sound.h"
 #include "UserInterface.h"
 #include "Utilities.h"
 
@@ -52,6 +53,7 @@ class Application : public IEventReceiver
         dimension2d<u32>      screen_dimensions;
         s32                   screen_height;
         s32                   screen_width;
+        Sound*                sound;
         ITexture*             texture_game_screen;
         ITexture*             texture_highlight_green;
         ITexture*             texture_highlight_none;
@@ -59,7 +61,7 @@ class Application : public IEventReceiver
         u32                   timer_delay;
         bool                  timer_is_running;
         u32                   timer_start;
-        UserInterface         ui;
+        UserInterface*        ui;
         IVideoDriver*         video_driver;
         f32                   z_offset;
         
@@ -72,6 +74,7 @@ class Application : public IEventReceiver
         void initialize_irrlicht();
         void initialize_player();
         void initialize_settings();
+        void initialize_sound();
         void initialize_values();
         void load_data( const char* FILENAME );
         void load_resources();

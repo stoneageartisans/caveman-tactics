@@ -10,13 +10,7 @@
  * Public Methods *
  ******************/
 
-// Constructors
-UserInterface::UserInterface()
-{
-    Logger::log( "ERROR: An empty UserInterface was created. Disposing..." );
-    dispose();
-}
-
+// Constructor
 UserInterface::UserInterface( IrrlichtDevice* IRRLICHT_DEVICE, f32 Z_OFFSET, Character* PLAYER )
 {
     initialize( IRRLICHT_DEVICE, Z_OFFSET, PLAYER );

@@ -80,7 +80,7 @@ bool Application::OnEvent( const SEvent& EVENT )
                                     return_screen = MAIN_MENU;
                                     current_screen = CHARACTER;
                                     node_display_plane->setMaterialTexture( 0, texture_game_screen );
-                                    ui.set_view( current_screen );
+                                    ui->set_view( current_screen );
                                     was_handled = true;
                                     break;
                             }
@@ -101,7 +101,7 @@ bool Application::OnEvent( const SEvent& EVENT )
                                 return_screen = current_screen;
                                 current_screen = MAIN_MENU;
                                 node_display_plane->setMaterialTexture( 0, texture_menu_screen );
-                                ui.set_view( current_screen );
+                                ui->set_view( current_screen );
                                 was_handled = true;
                             }
                             break;
@@ -117,7 +117,7 @@ bool Application::OnEvent( const SEvent& EVENT )
                     {
                         current_screen = MAIN_MENU;
                         node_display_plane->setMaterialTexture( 0, texture_menu_screen );
-                        ui.set_view( current_screen );
+                        ui->set_view( current_screen );
                         was_handled = true;
                     }
                     break;
@@ -128,7 +128,7 @@ bool Application::OnEvent( const SEvent& EVENT )
                         {
                             current_screen = MAIN_MENU;
                             node_display_plane->setMaterialTexture( 0, texture_menu_screen );
-                            ui.set_view( current_screen );
+                            ui->set_view( current_screen );
                             was_handled = true;
                         }
                     }
@@ -210,7 +210,8 @@ void Application::check_timer()
 
 void Application::dispose()
 {
-    // TODO
+    delete sound;
+    delete ui;
 }
 
 void Application::execute_process( Process PROCESS )
@@ -221,7 +222,7 @@ void Application::execute_process( Process PROCESS )
             // Do nothing
             break;
         case FLASH_TEXT:
-            ui.flash_text();
+            ui->flash_text();
             start_timer( DELAY_TEXT_FLASH, FLASH_TEXT );
             break;
         case SHOW_TITLE_SCREEN:
@@ -245,7 +246,9 @@ void Application::initialize()
     
     load_resources();
     
-    ui = UserInterface( irrlicht_device, z_offset, &player );
+    initialize_sound();
+    
+    ui = new UserInterface( irrlicht_device, z_offset, &player );
 }
 
 void Application::initialize_camera()
@@ -385,6 +388,13 @@ void Application::initialize_settings()
     screen_dimensions = dimension2d<u32>( screen_width, screen_height );
     
     temp_device->drop();
+}
+
+void Application::initialize_sound()
+{
+    sound = new Sound();
+    
+    sound->playMusic();
 }
 
 void Application::initialize_values()

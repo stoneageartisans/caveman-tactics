@@ -21,7 +21,6 @@ using namespace gui;
 class UserInterface
 {
     public:
-        UserInterface();
         UserInterface( IrrlichtDevice* IRRLICHT_DEVICE, f32 Z_OFFSET, Character* PLAYER );
         ~UserInterface();
         void flash_text();
