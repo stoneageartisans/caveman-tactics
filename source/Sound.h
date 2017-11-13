@@ -13,7 +13,8 @@ class Sound
     public:
         Sound();
         ~Sound();
-        void playMusic();
+        void playMusic( bool RESTART );
+        void setVolume( float NEW_VOLUME );
         void stopMusic();
 
     private:

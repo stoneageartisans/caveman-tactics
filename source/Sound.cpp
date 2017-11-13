@@ -9,11 +9,13 @@
 
 #include <cstddef>
 
+/******************
+ * Public Methods *
+ ******************/
+
 Sound::Sound()
 {
-    initialized = BASS_Init( SND_DEVICE, SND_FREQ, 0, 0, NULL );
-    
-    if( initialized )
+    if( BASS_Init( SND_DEVICE, SND_FREQ, 0, 0, NULL ) )
     {
         Logger::log( "BASS was successfully initialized" );
         
@@ -27,18 +29,26 @@ Sound::Sound()
 
 Sound::~Sound()
 {
-    if( initialized )
-    {
-        BASS_Free();
-    }
+    BASS_Free();
 }
 
-void Sound::playMusic()
+void Sound::playMusic( bool RESTART )
 {
-    if( initialized )
+    if( RESTART )
     {
         BASS_ChannelPlay( stream_handle_music, TRUE );
     }
+    else
+    {
+        BASS_ChannelPlay( stream_handle_music, FALSE );
+    }
+}
+
+void Sound::setVolume( float NEW_VOLUME )
+{
+    DWORD volume = NEW_VOLUME * 10000;
+    
+    BASS_SetConfig( BASS_CONFIG_GVOL_STREAM, volume );
 }
 
 void Sound::stopMusic()

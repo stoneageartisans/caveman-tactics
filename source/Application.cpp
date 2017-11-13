@@ -72,15 +72,72 @@ bool Application::OnEvent( const SEvent& EVENT )
                         case EGET_BUTTON_CLICKED:
                             switch( EVENT.GUIEvent.Caller->getID() )
                             {
-                                case BUTTON_EXIT:
-                                    exit();
-                                    was_handled = true;
-                                    break;
                                 case BUTTON_START:
                                     return_screen = MAIN_MENU;
                                     current_screen = CHARACTER;
                                     node_display_plane->setMaterialTexture( 0, texture_game_screen );
                                     ui->set_view( current_screen );
+                                    was_handled = true;
+                                    break;
+                                case BUTTON_OPTIONS:
+                                    current_screen = OPTIONS;
+                                    node_display_plane->setMaterialTexture( 0, texture_menu_screen );
+                                    ui->set_view( current_screen );
+                                    was_handled = true;
+                                    break;
+                                case BUTTON_EXIT:
+                                    exit();
+                                    was_handled = true;
+                                    break;
+                            }
+                            break;
+                    }
+                    break;
+            }
+            break;
+        case OPTIONS:
+            switch( EVENT.EventType )
+            {
+                case EET_KEY_INPUT_EVENT:
+                    switch( EVENT.KeyInput.Key )
+                    {
+                        case KEY_ESCAPE:
+                            if( !EVENT.KeyInput.PressedDown )
+                            {
+                                current_screen = MAIN_MENU;
+                                //node_display_plane->setMaterialTexture( 0, texture_menu_screen );
+                                ui->set_view( current_screen );
+                                was_handled = true;
+                            }
+                            break;
+                    }
+                    break;
+                case EET_GUI_EVENT:
+                    switch( EVENT.GUIEvent.EventType )
+                    {
+                        case EGET_BUTTON_CLICKED:
+                            switch( EVENT.GUIEvent.Caller->getID() )
+                            {
+                                case BUTTON_OPTIONS_DONE:
+                                    current_screen = MAIN_MENU;
+                                    //node_display_plane->setMaterialTexture( 0, texture_menu_screen );
+                                    ui->set_view( current_screen );
+                                    was_handled = true;
+                                    break;
+                            }
+                            break;
+                        case EGET_CHECKBOX_CHANGED:
+                            switch( EVENT.GUIEvent.Caller->getID() )
+                            {
+                                case CHECKBOX_MUSIC:
+                                    if( ( (IGUICheckBox*) EVENT.GUIEvent.Caller )->isChecked() )
+                                    {
+                                        sound->setVolume( 1.0 );
+                                    }
+                                    else
+                                    {
+                                        sound->setVolume( 0 );
+                                    }
                                     was_handled = true;
                                     break;
                             }
@@ -134,8 +191,6 @@ bool Application::OnEvent( const SEvent& EVENT )
                     }
                     break;
             }
-            break;
-        case OPTIONS:
             break;
         case NO_SCREEN:
             break;
@@ -303,7 +358,7 @@ void Application::initialize_irrlicht()
     irrlicht_device = createDevice( driver_type,
                                     screen_dimensions,
                                     BIT_DEPTH,
-                                    display_type );    
+                                    display_type );
     irrlicht_device->setResizable( false );
     irrlicht_device->setWindowCaption( WINDOW_CAPTION );
     irrlicht_device->getFileSystem()->addFileArchive( FILE_RESOURCES );
@@ -394,7 +449,7 @@ void Application::initialize_sound()
 {
     sound = new Sound();
     
-    sound->playMusic();
+    sound->playMusic( true );
 }
 
 void Application::initialize_values()

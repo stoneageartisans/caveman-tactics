@@ -24,7 +24,7 @@ enum Screen
     OPTIONS
 };
 
-// GUI Buttons
+// GUI Widgets
 #define BUTTON_AGILITY_MINUS  10
 #define BUTTON_AGILITY_PLUS   11
 #define BUTTON_BRAINS_MINUS   20
@@ -36,7 +36,9 @@ enum Screen
 #define BUTTON_START         100
 #define BUTTON_RESUME        110
 #define BUTTON_OPTIONS       120
+#define BUTTON_OPTIONS_DONE  121
 #define BUTTON_EXIT          999
+#define CHECKBOX_MUSIC       122
 
 // Colors                          A    R    G    B
 #define COLOR_TRANSPARENT SColor(  0,   0,   0,   0)
@@ -75,11 +77,25 @@ enum Screen
 #define DELAY_SPLASH     2500
 #define DELAY_TEXT_FLASH  500
 #define LIGHT_RADIUS     3000
+#define SMALL               0
+#define MEDIUM              1
+#define LARGE               2
 
 // Packed Files - Fonts
-#define FONT_24 "fonts/font_comic_24.xml"
-#define FONT_20 "fonts/font_comic_20.xml"
-#define FONT_16 "fonts/font_comic_16.xml"
+const static char* FONT[] =
+{
+    "fonts/font_comic_16.xml",
+    "fonts/font_comic_20.xml",
+    "fonts/font_comic_24.xml"
+};
+
+// Packed Files - Icons
+const static char* CHECKMARK[] =
+{
+    "icons/checkmark_24.png",
+    "icons/checkmark_32.png",
+    "icons/checkmark_48.png"
+};
 
 // Packed Files - Images
 #define CHARACTER_UNARMED "images/character_unarmed.png"
@@ -96,6 +112,16 @@ enum Screen
 #define DISPLAY_PLANE   "meshes/plane_1920x1200.3ds"
 #define CHARACTER_PLANE "meshes/plane_256x256.3ds"
 #define OVERLAY_PLANE   "meshes/plane_256x256.3ds"
+
+// Position - Buttons
+#define Y_BUTTON_START         240
+#define Y_BUTTON_RESUME         80
+#define Y_BUTTON_OPTIONS       -80
+#define Y_BUTTON_EXIT         -240
+#define Y_BUTTON_OPTIONS_DONE -320
+
+// Position - Checkboxes
+#define Y_CHECKBOX_MUSIC  0
 
 // Position - UI Text
 #define STAT_LABEL_X       -750
@@ -148,9 +174,10 @@ enum Screen
 #define Z_OFFSET_1_600     0.0
 #define Z_OFFSET_1_777     0.0
 
-// Widget Size Multipliers
+// Widget Size Modifiers
+#define CHECKBOX_SIZE      32
 #define MENU_BUTTON_HEIGHT  1.75
-#define MENU_BUTTON_WIDTH  10
+#define MENU_BUTTON_WIDTH   8
 #define STAT_BUTTON_HEIGHT  1
 #define STAT_BUTTON_WIDTH   2
 

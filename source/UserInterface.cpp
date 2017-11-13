@@ -34,12 +34,18 @@ void UserInterface::flash_text()
     }
 }
 
+IGUIElement* UserInterface::getWidget( s32 WIDGET_ID )
+{    
+    return widgets[WIDGET_ID];
+}
+
 void UserInterface::set_view( Screen SCREEN )
 {
     switch( SCREEN )
     {
         case MAIN_MENU:
             hide_character_screen();
+            hide_options_screen();
             show_main_menu();
             break;
         case GAME:
@@ -51,6 +57,8 @@ void UserInterface::set_view( Screen SCREEN )
             show_character_screen();
             break;
         case OPTIONS:
+            hide_main_menu();
+            show_options_screen();
             break;
         case TITLE:
             break;
@@ -109,6 +117,12 @@ void UserInterface::hide_main_menu()
     button_start->setVisible( false );
 }
 
+void UserInterface::hide_options_screen()
+{
+    checkbox_music->setVisible( false );
+    button_options_done->setVisible( false );
+}
+
 void UserInterface::initialize( IrrlichtDevice* IRRLICHT_DEVICE, f32 Z_OFFSET, Character* PLAYER )
 {
     player = PLAYER;    
@@ -120,6 +134,21 @@ void UserInterface::initialize( IrrlichtDevice* IRRLICHT_DEVICE, f32 Z_OFFSET, C
     
     screen_width = video_driver->getScreenSize().Width;
     screen_height = video_driver->getScreenSize().Height;
+    
+    s32 screen_diagonal = squareroot( ( screen_width * screen_width ) + ( screen_height * screen_height ) );
+    
+    if( screen_diagonal < 1440 )
+    {
+        size = SMALL;
+    }
+    else if( screen_diagonal > 1920 )
+    {
+        size = LARGE;
+    }
+    else
+    {
+        size = MEDIUM;
+    }
     
     initialize_fonts();
     initialize_skin();
@@ -292,6 +321,8 @@ void UserInterface::initialize_character_display()
                                                     0,
                                                     BUTTON_BRAWN_PLUS,
                                                     L"+" );
+    widgets.insert( BUTTON_BRAWN_PLUS, button_brawn_plus );
+    
     temp_position.X += ( button_width * 1.1 );
     button_brawn_minus = gui_environment->addButton( rect<s32>( position2d<s32>( temp_position.X - ( button_width / 2 ),
                                                                                  temp_position.Y - ( button_height / 2 ) ),
@@ -299,6 +330,7 @@ void UserInterface::initialize_character_display()
                                                      0,
                                                      BUTTON_BRAWN_MINUS,
                                                      L"-" );
+    widgets.insert( BUTTON_BRAWN_MINUS, button_brawn_minus );
     
     temp_position = collision_manager.getScreenCoordinatesFrom3DPosition( textnode_agility->getPosition() );
     temp_position.X += ( button_width * 1.1 );
@@ -308,6 +340,8 @@ void UserInterface::initialize_character_display()
                                                       0,
                                                       BUTTON_AGILITY_PLUS,
                                                       L"+" );
+    widgets.insert( BUTTON_AGILITY_PLUS, button_agility_plus );
+    
     temp_position.X += ( button_width * 1.1 );
     button_agility_minus = gui_environment->addButton( rect<s32>( position2d<s32>( temp_position.X - ( button_width / 2 ),
                                                                                    temp_position.Y - ( button_height / 2 ) ),
@@ -315,6 +349,7 @@ void UserInterface::initialize_character_display()
                                                        0,
                                                        BUTTON_AGILITY_MINUS,
                                                        L"-" );
+    widgets.insert( BUTTON_AGILITY_MINUS, button_agility_minus );
     
     temp_position = collision_manager.getScreenCoordinatesFrom3DPosition( textnode_brains->getPosition() );
     temp_position.X += ( button_width * 1.1 );
@@ -324,6 +359,8 @@ void UserInterface::initialize_character_display()
                                                      0,
                                                      BUTTON_BRAINS_PLUS,
                                                      L"+" );
+    widgets.insert( BUTTON_BRAINS_PLUS, button_brains_plus );
+    
     temp_position.X += ( button_width * 1.1 );
     button_brains_minus = gui_environment->addButton( rect<s32>( position2d<s32>( temp_position.X - ( button_width / 2 ),
                                                                                   temp_position.Y - ( button_height / 2 ) ),
@@ -331,6 +368,7 @@ void UserInterface::initialize_character_display()
                                                       0,
                                                       BUTTON_BRAINS_MINUS,
                                                       L"-" );
+    widgets.insert( BUTTON_BRAINS_MINUS, button_brains_minus );
     
     temp_position = collision_manager.getScreenCoordinatesFrom3DPosition( textnode_stamina->getPosition() );
     temp_position.X += ( button_width * 1.1 );
@@ -340,6 +378,8 @@ void UserInterface::initialize_character_display()
                                                       0,
                                                       BUTTON_STAMINA_PLUS,
                                                       L"+" );
+    widgets.insert( BUTTON_STAMINA_PLUS, button_stamina_plus );
+    
     temp_position.X += ( button_width * 1.1 );
     button_stamina_minus = gui_environment->addButton( rect<s32>( position2d<s32>( temp_position.X - ( button_width / 2 ),
                                                                                    temp_position.Y - ( button_height / 2 ) ),
@@ -347,26 +387,14 @@ void UserInterface::initialize_character_display()
                                                        0,
                                                        BUTTON_STAMINA_MINUS,
                                                        L"-" );
+    widgets.insert( BUTTON_STAMINA_MINUS, button_stamina_minus );
     
     hide_character_screen();
 }
 
 void UserInterface::initialize_fonts()
 {
-    s32 screen_diagonal = squareroot( ( screen_width * screen_width ) + ( screen_height * screen_height ) );
-    
-    if( screen_diagonal < 1440 )
-    {
-        font_main = gui_environment->getFont( FONT_16 );
-    }
-    else if( screen_diagonal > 1920 )
-    {
-        font_main = gui_environment->getFont( FONT_24 );
-    }
-    else
-    {
-        font_main = gui_environment->getFont( FONT_20 );
-    }
+    font_main = gui_environment->getFont( FONT[size] );
 }
 
 void UserInterface::initialize_main_menu()
@@ -378,41 +406,75 @@ void UserInterface::initialize_main_menu()
     
     position2d<s32> temp_position;
     
-    temp_position = collision_manager.getScreenCoordinatesFrom3DPosition( vector3df( 0, 240, TEXT_Z + z_offset ) );
+    temp_position = collision_manager.getScreenCoordinatesFrom3DPosition( vector3df( 0, Y_BUTTON_START, TEXT_Z + z_offset ) );
     button_start = gui_environment->addButton( rect<s32>( position2d<s32>( temp_position.X - ( button_width / 2 ),
                                                                            temp_position.Y - ( button_height / 2 ) ),
                                                           dimension2d<u32>( button_width, button_height ) ),
                                                0,
                                                BUTTON_START,
-                                               L"New Game" );
+                                               L"Start" );
+    widgets.insert( BUTTON_START, button_start );
     
-    temp_position = collision_manager.getScreenCoordinatesFrom3DPosition( vector3df( 0, 80, TEXT_Z + z_offset ) );
+    temp_position = collision_manager.getScreenCoordinatesFrom3DPosition( vector3df( 0, Y_BUTTON_RESUME, TEXT_Z + z_offset ) );
     button_resume = gui_environment->addButton( rect<s32>( position2d<s32>( temp_position.X - ( button_width / 2 ),
                                                                             temp_position.Y - ( button_height / 2 ) ),
                                                            dimension2d<u32>( button_width, button_height ) ),
                                                 0,
                                                 BUTTON_RESUME,
-	                                            L"Resume Game" );
+	                                            L"Resume" );
+    widgets.insert( BUTTON_RESUME, button_resume );    
+    button_resume->setEnabled( false ); // temporary - delete this line when resume is set up
     
-    button_resume->setEnabled( false ); // temporary
-    temp_position = collision_manager.getScreenCoordinatesFrom3DPosition( vector3df( 0, -80, TEXT_Z + z_offset ) );
+    temp_position = collision_manager.getScreenCoordinatesFrom3DPosition( vector3df( 0, Y_BUTTON_OPTIONS, TEXT_Z + z_offset ) );
     button_options = gui_environment->addButton( rect<s32>( position2d<s32>( temp_position.X - ( button_width / 2 ),
                                                                              temp_position.Y - ( button_height / 2 ) ),
                                                             dimension2d<u32>( button_width, button_height ) ),
 	                                             0,
 	                                             BUTTON_OPTIONS,
-	                                             L"Game Options" );
+	                                             L"Options" );
+    widgets.insert( BUTTON_OPTIONS, button_options );
     
-    button_options->setEnabled( false ); // temporary
-    temp_position = collision_manager.getScreenCoordinatesFrom3DPosition( vector3df( 0, -240, TEXT_Z + z_offset ) );
+    temp_position = collision_manager.getScreenCoordinatesFrom3DPosition( vector3df( 0,Y_BUTTON_EXIT, TEXT_Z + z_offset ) );
     button_exit = gui_environment->addButton( rect<s32>( position2d<s32>( temp_position.X - ( button_width / 2 ),
                                                                           temp_position.Y - ( button_height / 2 ) ),
                                                          dimension2d<u32>( button_width, button_height ) ),
 	                                          0,
 	                                          BUTTON_EXIT,
-	                                          L"Exit Game" );
+	                                          L"Exit" );
+    widgets.insert( BUTTON_EXIT, button_exit );
     
     hide_main_menu();
+}
+
+void UserInterface::initialize_options_screen()
+{
+    ISceneCollisionManager& collision_manager = *(scene_manager->getSceneCollisionManager());
+    
+    u32 button_width = font_main->getDimension( L"X" ).Width * MENU_BUTTON_WIDTH;
+    u32 button_height = font_main->getDimension( L"X" ).Height * MENU_BUTTON_HEIGHT;
+    
+    position2d<s32> temp_position;
+    
+    temp_position = collision_manager.getScreenCoordinatesFrom3DPosition( vector3df( 0, Y_BUTTON_OPTIONS_DONE, TEXT_Z + z_offset ) );
+    button_options_done = gui_environment->addButton( rect<s32>( position2d<s32>( temp_position.X - ( button_width / 2 ),
+                                                                                  temp_position.Y - ( button_height / 2 ) ),
+                                                                 dimension2d<u32>( button_width, button_height ) ),
+                                                      0,
+                                                      BUTTON_OPTIONS_DONE,
+                                                      L"Done" );
+    widgets.insert( BUTTON_OPTIONS_DONE, button_options_done );
+    
+    temp_position = collision_manager.getScreenCoordinatesFrom3DPosition( vector3df( 0, Y_CHECKBOX_MUSIC, TEXT_Z + z_offset ) );
+    checkbox_music = gui_environment->addCheckBox( true,
+                                                   rect<s32>( position2d<s32>( temp_position.X - ( button_width / 2 ),
+                                                                               temp_position.Y - ( button_height / 2 ) ),
+                                                              dimension2d<u32>( button_width, button_height ) ),
+                                                   0,
+                                                   CHECKBOX_MUSIC,
+                                                   L"Music On" );
+    widgets.insert( CHECKBOX_MUSIC, checkbox_music );
+    
+    hide_options_screen();
 }
 
 void UserInterface::initialize_skin()
@@ -420,19 +482,23 @@ void UserInterface::initialize_skin()
     skin = gui_environment->getSkin();
     
     skin->setFont( font_main );
+    skin->setSize( EGDS_CHECK_BOX_WIDTH, ( screen_width / CHECKBOX_SIZE ) );
+    skin->setIcon( EGDI_CHECK_BOX_CHECKED, skin->getSpriteBank()->addTextureAsSprite( video_driver->getTexture( CHECKMARK[size] ) ) );
     skin->setColor( EGDC_BUTTON_TEXT, COLOR_WHITE );
     skin->setColor( EGDC_GRAY_TEXT, COLOR_GRAY );
     skin->setColor( EGDC_WINDOW_SYMBOL, COLOR_WHITE );
-    skin->setColor( EGDC_3D_FACE, COLOR_DKGRAY );       // Button base color
-    skin->setColor( EGDC_3D_HIGH_LIGHT, COLOR_DKGRAY ); // Button border color
-    skin->setColor( EGDC_3D_SHADOW, COLOR_DEVGRAY );    // Button shading color
+    skin->setColor( EGDC_3D_FACE, COLOR_DKGRAY );          // Button base color
+    skin->setColor( EGDC_3D_HIGH_LIGHT, COLOR_DKGRAY );    // Button border color
+    skin->setColor( EGDC_3D_SHADOW, COLOR_DEVGRAY );       // Button shading color
+    skin->setColor( EGDC_EDITABLE, COLOR_DKGRAY );         // Checkbox background color
+    skin->setColor( EGDC_FOCUSED_EDITABLE, COLOR_DKGRAY ); // Checkbox focus color
 }
 
 void UserInterface::initialize_title_screen()
 {    
     textnode_continue = scene_manager->addTextSceneNode( font_main,
                                                          STRING_CONTINUE,
-                                                         COLOR_WHITE,
+                                                         COLOR_YELLOW,
                                                          0,
                                                          vector3df( X_Y_CONTINUE,
                                                                     TEXT_Z + z_offset ),
@@ -448,6 +514,7 @@ void UserInterface::initialize_widgets()
 {
     initialize_title_screen();
     initialize_main_menu();
+    initialize_options_screen();
     initialize_character_display();
 }
 
@@ -498,4 +565,10 @@ void UserInterface::show_main_menu()
         textnode_continue->setVisible( false );
         title_screen_shown = true;
     }
+}
+
+void UserInterface::show_options_screen()
+{
+    checkbox_music->setVisible( true );
+    button_options_done->setVisible( true );
 }
