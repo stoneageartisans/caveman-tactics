@@ -1,0 +1,21 @@
+- Add character creation
+
+- Add options screen
+
+- Add music (BASS or irrKlang?)
+
+- Add logic to resume game
+
+- Add calculation of initiative
+
+- Add player round controls
+
+- Add opponent AI
+
+- Add highlighting of hexes player can move into 
+
+- Add a combo box to weapon to "buy" a weapon and adjust unspent points accordingly
+
+- Stretch goal: Make a player piece "mow" the hexes and turn them green during character creation
+
+- 

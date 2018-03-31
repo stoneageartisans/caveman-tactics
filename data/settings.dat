@@ -1,0 +1,8 @@
+display_type     windowed
+driver_type      opengl
+
+screen_width     1280
+screen_height    800
+
+is_new_game      true
+

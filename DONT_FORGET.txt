@@ -1,0 +1,5 @@
+For libbass.so to be found by the binary:
+
+readelf -d caveman-tactics-debug
+
+patchelf --set-rpath '.' caveman-tactics-debug
